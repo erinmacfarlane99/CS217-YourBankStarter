@@ -53,7 +53,8 @@ public class Account {
 
     @Override
     public String toString() {
-        return "name: " + this.getAccountName() + " balance: " + new DecimalFormat("#.00").format(this.getBalance());
+        return "Account Name: " + this.getAccountName() +
+                ", Balance: " + new DecimalFormat("#.00").format(this.getBalance());
     }
 
 

@@ -61,10 +61,11 @@ public class App extends Jooby {
         get("/details", () -> {
             String out = new String();
             for (Account a : accountList) {
-                out += a.toString() + " <br> ";
+                out += a.toString() + "    ";
             }
-            return Results.html("Accounts")
-                    .put("details", out);
+            return out;
+            //return Results.html("Accounts")
+              //      .put("details", out);
         });
 
         // Perform actions on startup

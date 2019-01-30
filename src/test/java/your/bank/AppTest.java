@@ -36,4 +36,12 @@ public class AppTest {
     assertEquals("Hello World!", result);
   }
 
+  @Test
+  public void TestAccountDetailsJSON() {
+    get("/accountDetailsJSON")
+            .then()
+            .assertThat()
+            .statusCode(200)
+            .contentType("application/json;charset=UTF-8");
+  }
 }

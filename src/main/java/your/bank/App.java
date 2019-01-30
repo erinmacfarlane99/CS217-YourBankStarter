@@ -8,11 +8,13 @@ import org.jooby.Results;
 import org.jooby.hbs.Hbs;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
+import org.json.JSONObject;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 
 /**
  * @author jooby generator
@@ -59,13 +61,16 @@ public class App extends Jooby {
         });
 
         get("/details", () -> {
-            String out = new String();
-            for (Account a : accountList) {
-                out += a.toString() + "    ";
-            }
-            return out;
-            //return Results.html("Accounts")
-              //      .put("details", out);
+
+            //JSONObject output = new JSONObject();
+            //for (Account a : accountList) {
+                //out += a.toString() + "    ";
+              //  output.put(a);
+            //}
+
+            //output.put("list",accountList);
+            //return output;
+            return Results.html("Accounts").put("accounts",accountList);
         });
 
         // Perform actions on startup

@@ -7,9 +7,20 @@
     <script src="bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>Account Details</h1>
-<p>
-    {{details}}
-</p>
+
+    <table>
+        <tr>
+            <th>Account Name</th>
+            <th>Account Balance</th>
+        </tr>
+        {{#accounts}}
+        <tr>
+            <td>{{accountName}}</td>
+            <td>{{balance}}</td>
+        </tr>
+        {{/accounts}}
+    </table>
+
+
 </body>
 </html>

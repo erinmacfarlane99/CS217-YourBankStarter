@@ -60,18 +60,9 @@ public class App extends Jooby {
                     .put("name", name);
         });
 
-        get("/details", () -> {
+        get("/accountDetailsJSON", () -> Results.json(accountList));
 
-            //JSONObject output = new JSONObject();
-            //for (Account a : accountList) {
-                //out += a.toString() + "    ";
-              //  output.put(a);
-            //}
-
-            //output.put("list",accountList);
-            //return output;
-            return Results.html("Accounts").put("accounts",accountList);
-        });
+        get("/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
 
         // Perform actions on startup
         onStart(() -> {

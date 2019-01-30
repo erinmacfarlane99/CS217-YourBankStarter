@@ -18,6 +18,7 @@ public class AccountTests {
         assertEquals(a.getBalance(),0);
     }
 
+
     @Test
     public void test2_deposits(){
         Account a = new Account(50);
@@ -51,10 +52,16 @@ public class AccountTests {
     }
 
     @Test
-    public void test5_BigDecimals () {
+    public void test6_BigDecimals () {
         Account a = new Account(5.45);
         a.deposit(17.56);
         assertEquals(a.getBalance(),23.01);
+    }
+
+    @Test
+    public void test_noNegativeBalance(){
+        Account a = new Account(-50);
+        assertEquals(a.getBalance(),0);
     }
 
 

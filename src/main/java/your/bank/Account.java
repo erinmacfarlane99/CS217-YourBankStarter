@@ -18,11 +18,11 @@ public class Account {
 
     public Account(double amount) {
         accName = "placeholder_name";
-        balance = new BigDecimal(amount);
+        balance = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
     }
 
     public Account(String name, double amount) {
-        balance = new BigDecimal(amount);
+        balance = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         accName = name;
     }
 

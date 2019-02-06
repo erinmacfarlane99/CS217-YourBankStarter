@@ -6,6 +6,7 @@ cache:
 
 stages:
   - build
+  - test
 #  - deploy
 
 
@@ -15,6 +16,11 @@ maven_package:
   artifacts:
     paths:
     - target/bankname-*.jar
+
+maven_test:
+  stage: test
+  script: mvn test
+
 
 # Ignore this for now, we will use it later
 #deploy_cf:

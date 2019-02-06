@@ -1,5 +1,6 @@
 package your.bank;
 
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import jooby.helpers.UnirestHelper;
 import org.jooby.Jooby;
@@ -11,6 +12,7 @@ import org.jooby.json.Jackson;
 import org.json.JSONObject;
 
 import javax.sql.DataSource;
+import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -77,6 +79,9 @@ public class App extends Jooby {
             accountList.add(new Account("Chandler", 3.00));
             accountList.add(new Account("Ross", 54.32));
 
+            HttpResponse<Account> accountResponse = Unirest.get("http://your-bank.herouapp.com/api/Team6/accounts").asObject(Account.class);
+            Account accountObject = accountResponse.getBody();
+
         });
 
         // Perform actions after startup
@@ -87,6 +92,7 @@ public class App extends Jooby {
     }
 
     public static void main(final String[] args) {
+
         run(App::new, args);
     }
 

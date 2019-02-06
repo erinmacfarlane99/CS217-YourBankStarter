@@ -9,7 +9,8 @@ import org.jooby.hbs.Hbs;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 import org.json.JSONObject;
-
+import java.sql.Statement;
+import java.sql.Connection;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,12 +78,36 @@ public class App extends Jooby {
             accountList.add(new Account("Chandler", 3.00));
             accountList.add(new Account("Ross", 54.32));
 
+
+            //opens a connection
+            DataSource db = require(DataSource.class);
+            Connection connection = cb.createConnesction();
+            connection.close();
+
+            //create a table
+            Statement stmt = c.creatStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS bankAccount (\n"
+                    +" name text, \n"
+                    + "amount BigDecimal);";
+
+             stmt.execute(sql);
+
+             //insert data
+             String sql = "INSERT INTO bankAccount"
+
+
+
         });
+
+
 
         // Perform actions after startup
         onStarted(() -> {
             System.out.println("Started!");
         });
+
+
+
 
     }
 

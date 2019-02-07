@@ -11,6 +11,9 @@ import org.jooby.json.Jackson;
 import org.json.JSONObject;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -69,6 +72,24 @@ public class App extends Jooby {
             System.out.println("Starting Up...");
 
             DataSource ds = require(DataSource.class);
+            Connection cn = ds.getConnection();
+
+            Statement stmt = cn.createStatement();
+            String sqlTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
+                        + " accName text NOT NULL, \n"
+                        + " balance decimal NOT NULL);";
+            stmt.execute(sqlTable);
+
+            String sqlData = "INSERT INTO accounts (accName, balance)"
+                        + "VALUES (?,?)";
+
+            PreparedStatement prep = cn.prepareStatement(sqlData);
+            prep.setString(1,"Rachel");
+            prep.setDouble(2, 50.00);
+            prep.executeUpdate();
+
+            cn.close();
+
 
             accountList.add(new Account("Rachel", 50.00));
             accountList.add(new Account("Monica", 100.00));

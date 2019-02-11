@@ -10,7 +10,7 @@ import org.jooby.hbs.Hbs;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
 import org.json.JSONObject;
-
+import java.sql.ResultSet;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -74,33 +74,43 @@ public class App extends Jooby {
         onStart(() -> {
             System.out.println("Starting Up...");
 
-//            DataSource ds = require(DataSource.class);
-//            Connection cn = ds.getConnection();
-//
-//            Statement stmt = cn.createStatement();
-//            String sqlTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
-//                        + " accName text NOT NULL, \n"
-//                        + " balance decimal NOT NULL);";
-//            stmt.execute(sqlTable);
-//
-//            String sqlData = "INSERT INTO accounts (accName, balance)"
-//                        + "VALUES (?,?,?)";
-//
-//            PreparedStatement prep = cn.prepareStatement(sqlData);
-//            prep.setString(1,"Rachel");
-//            prep.setDouble(2, 50.00);
-//            prep.setString(3,"USD");
-//            prep.executeUpdate();
-//
-//            cn.close();
+
+            //opens a connection
+            DataSource db = require(DataSource.class);
+            Connection connection = db.getConnection();
 
 
-//            accountList.add(new Account("Rachel", 50.00));
-//            accountList.add(new Account("Monica", 100.00));
-//            accountList.add(new Account("Phoebe", 76.00));
-//            accountList.add(new Account("Joey", 23.90));
-//            accountList.add(new Account("Chandler", 3.00));
-//            accountList.add(new Account("Ross", 54.32));
+            //create a table
+            Statement stmt = connection.createStatement();
+            String sql = "CREATE TABLE IF NOT EXISTS bankAccount (\n"
+                    +" name text, \n"
+                    + " amount decimal, \n"
+                    + " currency text);";
+            stmt.execute(sql);
+
+
+
+            //insert data
+            String sql2 = "INSERT INTO bankAccount (name, amount, currency)" + "VALUES(?,?,?)";
+            PreparedStatement prep = connection.prepareStatement(sql);
+            for ( Account a: accountList) {
+                prep.setString(1, a.getName());
+                prep.setDouble(2, a.getAmount());
+                prep.setString(3, a.getCurrency());
+                prep.executeUpdate();
+            }
+
+
+            //retrieving data
+            Statement stmt2 = connection.createStatement();
+            String sql3 = "SELECT * FROM bankAccount";
+            ResultSet rs = stmt2.executeQuery(sql3);
+            
+            System.out.println(rs);
+
+
+
+            connection.close();
 
             HttpResponse<Account[]> accountsResponse =
                     Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);

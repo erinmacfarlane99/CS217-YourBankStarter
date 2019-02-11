@@ -11,6 +11,7 @@ import org.jooby.json.Jackson;
 import org.json.JSONObject;
 import java.sql.Statement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +89,24 @@ public class App extends Jooby {
             Statement stmt = c.creatStatement();
             String sql = "CREATE TABLE IF NOT EXISTS bankAccount (\n"
                     +" name text, \n"
-                    + "amount BigDecimal);";
+                    + " amount decimal, \n"
+                    + " currency text);";
+                    stmt.execute(sql);
 
              stmt.execute(sql);
 
              //insert data
-             String sql = "INSERT INTO bankAccount"
+             String sql2 = "INSERT INTO bankAccount (name, amount, currency)" + "VALUES(?,?,?)";
+             PreparedStatement prep = c.prepareStatement(sql);
+             for (int i = 0 ; i<5; i++ ){
+                 prep.setString(1, accountList.get(i).getAccountName());
+                 prep.setDouble(2, accountList.get(i).getBalance());
+                // prep.setString(3, accountList.get(i).getCurrency());
+                prep.executeUpdate();
+            }
+
+
+
 
 
 

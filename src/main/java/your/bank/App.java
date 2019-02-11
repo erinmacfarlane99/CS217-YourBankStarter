@@ -115,7 +115,6 @@ public class App extends Jooby {
                 int amount = rs.getInt("amount");
                 String currency = rs.getString("currency");
                 Account a = new Account(name, amount, currency);
-                //  System.out.println("ROW = " + i + j + k);
             }
             rs.close();
             connection.close();

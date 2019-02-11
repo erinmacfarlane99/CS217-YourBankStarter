@@ -1,5 +1,6 @@
 package your.bank;
 
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import jooby.helpers.UnirestHelper;
 import org.jooby.Jooby;
@@ -15,6 +16,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -25,6 +27,7 @@ import java.util.Random;
 public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
+    //private Account[] accountList;
 
     {
         // -- Start Boilerplate Setup --
@@ -71,32 +74,37 @@ public class App extends Jooby {
         onStart(() -> {
             System.out.println("Starting Up...");
 
-            DataSource ds = require(DataSource.class);
-            Connection cn = ds.getConnection();
+//            DataSource ds = require(DataSource.class);
+//            Connection cn = ds.getConnection();
+//
+//            Statement stmt = cn.createStatement();
+//            String sqlTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
+//                        + " accName text NOT NULL, \n"
+//                        + " balance decimal NOT NULL);";
+//            stmt.execute(sqlTable);
+//
+//            String sqlData = "INSERT INTO accounts (accName, balance)"
+//                        + "VALUES (?,?,?)";
+//
+//            PreparedStatement prep = cn.prepareStatement(sqlData);
+//            prep.setString(1,"Rachel");
+//            prep.setDouble(2, 50.00);
+//            prep.setString(3,"USD");
+//            prep.executeUpdate();
+//
+//            cn.close();
 
-            Statement stmt = cn.createStatement();
-            String sqlTable = "CREATE TABLE IF NOT EXISTS accounts (\n"
-                        + " accName text NOT NULL, \n"
-                        + " balance decimal NOT NULL);";
-            stmt.execute(sqlTable);
 
-            String sqlData = "INSERT INTO accounts (accName, balance)"
-                        + "VALUES (?,?)";
+//            accountList.add(new Account("Rachel", 50.00));
+//            accountList.add(new Account("Monica", 100.00));
+//            accountList.add(new Account("Phoebe", 76.00));
+//            accountList.add(new Account("Joey", 23.90));
+//            accountList.add(new Account("Chandler", 3.00));
+//            accountList.add(new Account("Ross", 54.32));
 
-            PreparedStatement prep = cn.prepareStatement(sqlData);
-            prep.setString(1,"Rachel");
-            prep.setDouble(2, 50.00);
-            prep.executeUpdate();
-
-            cn.close();
-
-
-            accountList.add(new Account("Rachel", 50.00));
-            accountList.add(new Account("Monica", 100.00));
-            accountList.add(new Account("Phoebe", 76.00));
-            accountList.add(new Account("Joey", 23.90));
-            accountList.add(new Account("Chandler", 3.00));
-            accountList.add(new Account("Ross", 54.32));
+            HttpResponse<Account[]> accountsResponse =
+                    Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
+            accountList = Arrays.asList(accountsResponse.getBody());
 
         });
 

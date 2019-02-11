@@ -10,13 +10,15 @@
 
     <table>
         <tr>
-            <th>Account Name</th>
-            <th>Account Balance</th>
+            <th>Account Name  </th>
+            <th>Account Balance  </th>
+            <th>Currency  </th>
         </tr>
         {{#accounts}}
         <tr>
-            <td>{{accountName}}</td>
-            <td>{{balance}}</td>
+            <td>{{name}}</td>
+            <td>{{amount}}</td>
+            <td>{{currency}}</td>
         </tr>
         {{/accounts}}
     </table>

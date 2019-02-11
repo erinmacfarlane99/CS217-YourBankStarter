@@ -8,53 +8,72 @@ import java.text.DecimalFormat;
 
 public class Account {
 
-    private BigDecimal balance;
-    private String accName;
+    private BigDecimal amount;
+    private String name;
+    private String currency;
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+    
     public Account() {
-        accName = "placeholder_name";
-        balance = new BigDecimal(0);
+        name = "placeholder_name";
+        amount = new BigDecimal(0);
+        currency = "GBP";
     }
 
     public Account(double amount) {
-        accName = "placeholder_name";
-        balance = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
+        name = "placeholder_name";
+        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
+        currency = "GBP";
     }
 
     public Account(String name, double amount) {
-        balance = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
-        accName = name;
+        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
+        this.name = name;
+        currency = "GBP";
     }
 
-    public String getAccountName() {
-        return accName;
+    public Account(String name, double amount, String currency) {
+        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
+        this.name = name;
+        this.currency = currency;
     }
 
-    public void setAccountName(String accName) {
-        this.accName = accName;
+    public String getName() {
+        return name;
     }
 
-    public double getBalance() {
-        return balance.doubleValue();
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public double getAmount() {
+        return amount.doubleValue();
     }
 
     public void deposit(double amount) {
-        balance = balance.add(valueOf(amount));
+        this.amount = this.amount.add(valueOf(amount));
     }
 
     public void withdraw(double amount) {
-        if (amount <= balance.doubleValue()) {
-            balance = balance.subtract(valueOf(amount));
+        if (amount <= this.amount.doubleValue()) {
+            this.amount = this.amount.subtract(valueOf(amount));
         } else {
-            throw new ArithmeticException("can't withdraw amount greater than balance");
+            throw new ArithmeticException("can't withdraw amount greater than amount");
         }
 
     }
 
     @Override
     public String toString() {
-        return "Account Name: " + this.getAccountName() +
-                ", Balance: " + new DecimalFormat("#.00").format(this.getBalance());
+        return "Account Name: " + this.getName() +
+                ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
+                ", currency: " + this.getCurrency();
     }
 
 

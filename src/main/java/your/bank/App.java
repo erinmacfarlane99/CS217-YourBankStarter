@@ -73,7 +73,9 @@ public class App extends Jooby {
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");
-
+            HttpResponse<Account[]> accountsResponse =
+                    Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
+            accountList = Arrays.asList(accountsResponse.getBody());
 
             //opens a connection
             DataSource db = require(DataSource.class);
@@ -91,7 +93,7 @@ public class App extends Jooby {
 
 
             //insert data
-            String sql2 = "INSERT INTO bankAccount (name, amount, currency)" + "VALUES(?,?,?)";
+            String sql2 = "INSERT INTO bankAccount (name, amount, currency) " + "VALUES (?,?,?)";
             PreparedStatement prep = connection.prepareStatement(sql);
             for ( Account a: accountList) {
                 prep.setString(1, a.getName());
@@ -105,16 +107,27 @@ public class App extends Jooby {
             Statement stmt2 = connection.createStatement();
             String sql3 = "SELECT * FROM bankAccount";
             ResultSet rs = stmt2.executeQuery(sql3);
-            
-            System.out.println(rs);
 
+            //creating account from results
 
-
+            while (rs.next()){
+                String name = rs.getString("name");
+                int amount = rs.getInt("amount");
+                String currency = rs.getString("currency");
+                Account a = new Account(name, amount, currency);
+                //  System.out.println("ROW = " + i + j + k);
+            }
+            rs.close();
             connection.close();
 
-            HttpResponse<Account[]> accountsResponse =
-                    Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
-            accountList = Arrays.asList(accountsResponse.getBody());
+            //test
+            for ( Account a: accountList) {
+                System.out.println(a.getName());
+                System.out.println(a.getAmount());
+                System.out.println(a.getCurrency());
+            }
+
+
 
         });
 

@@ -45,6 +45,9 @@ public class AppTest {
             .then()
             .assertThat()
             .statusCode(200)
+            .body(containsString("name"))
+            .body(containsString("amount"))
+            .body(containsString("currency"))
             .contentType("application/json;charset=UTF-8");
   }
 }

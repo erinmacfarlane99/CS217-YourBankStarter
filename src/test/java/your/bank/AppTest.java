@@ -1,6 +1,7 @@
 package your.bank;
 
 import static io.restassured.RestAssured.get;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,9 +24,11 @@ public class AppTest {
     get("/")
         .then()
         .assertThat()
-        .body(equalTo("Hello World!"))
+//        .body(equalTo("Hello World!"))
+        .body(containsString("Hello World!"))
         .statusCode(200)
-        .contentType("text/html;charset=UTF-8");
+//        .contentType("text/html;charset=UTF-8");
+        .contentType("application/json;charset=UTF-8");
   }
 
   @Test

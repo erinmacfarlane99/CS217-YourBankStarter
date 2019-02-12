@@ -70,6 +70,12 @@ public class App extends Jooby {
 
         get("/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
 
+        get("/accountDetails", () ->
+                Results
+                    .when("text/html", () -> Results.html("Accounts").put("accounts",accountList))
+                    .when("application/json", () -> Results.json(accountList))
+        );
+
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");

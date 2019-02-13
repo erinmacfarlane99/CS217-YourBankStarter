@@ -15,39 +15,39 @@ import org.junit.jupiter.api.Test;
 @JoobyTest
 public class AppTest {
 
-  // This is the instance of Jooby app to run
-  @JoobyApp
-  protected Jooby app = new App();
+    // This is the instance of Jooby app to run
+    @JoobyApp
+    protected Jooby app = new App();
 
-  @Test
-  public void integrationTest() {
-    get("/")
-        .then()
-        .assertThat()
+    @Test
+    public void integrationTest() {
+        get("/")
+                .then()
+                .assertThat()
 //        .body(equalTo("Hello World!"))
-        .body(containsString("Hello World!"))
-        .statusCode(200)
+                .body(containsString("Hello World!"))
+                .statusCode(200)
 //        .contentType("text/html;charset=UTF-8");
-        .contentType("application/json;charset=UTF-8");
-  }
+                .contentType("application/json;charset=UTF-8");
+    }
 
-  @Test
-  public void unitTest() throws Throwable {
-    String result = new MockRouter(new App())
-        .get("/");
+    @Test
+    public void unitTest() throws Throwable {
+        String result = new MockRouter(new App())
+                .get("/");
 
-    assertEquals("Hello World!", result);
-  }
+        assertEquals("Hello World!", result);
+    }
 
-  @Test
-  public void TestAccountDetailsJSON() {
-    get("/accountDetailsJSON")
-            .then()
-            .assertThat()
-            .statusCode(200)
-            .body(containsString("name"))
-            .body(containsString("amount"))
-            .body(containsString("currency"))
-            .contentType("application/json;charset=UTF-8");
-  }
+    @Test
+    public void TestAccountDetailsJSON() {
+        get("/accountDetailsJSON")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body(containsString("name"))
+                .body(containsString("amount"))
+                .body(containsString("currency"))
+                .contentType("application/json;charset=UTF-8");
+    }
 }

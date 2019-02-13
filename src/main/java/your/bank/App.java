@@ -94,7 +94,7 @@ public class App extends Jooby {
 
             //insert data
             String sql2 = "INSERT INTO bankAccount (name, amount, currency) " + "VALUES (?,?,?)";
-            PreparedStatement prep = connection.prepareStatement(sql);
+            PreparedStatement prep = connection.prepareStatement(sql2);
             for ( Account a: accountList) {
                 prep.setString(1, a.getName());
                 prep.setDouble(2, a.getAmount());

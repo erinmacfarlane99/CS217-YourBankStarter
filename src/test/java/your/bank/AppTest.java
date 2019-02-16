@@ -24,8 +24,8 @@ public class AppTest {
         get("/")
                 .then()
                 .assertThat()
-//        .body(equalTo("Hello World!"))
-                .body(containsString("Hello World!"))
+//        .body(equalTo("Welcome to the Banking Home Screen"))
+                .body(containsString("Welcome to the Banking Home Screen"))
                 .statusCode(200)
 //        .contentType("text/html;charset=UTF-8");
                 .contentType("application/json;charset=UTF-8");

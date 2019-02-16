@@ -90,6 +90,8 @@ public class App extends Jooby {
                 System.out.println(a.getName());
                 System.out.println(a.getAmount());
                 System.out.println(a.getCurrency());
+                System.out.println(a.getTransactionsProcessed());
+                System.out.println(a.getTransactionsFailed());
             }
 
         });
@@ -117,16 +119,20 @@ public class App extends Jooby {
         String sql = "CREATE TABLE IF NOT EXISTS bankAccount (\n"
                 +" name text, \n"
                 + " amount decimal, \n"
-                + " currency text);";
+                + " currency text, \n"
+                + " transactionsProcessed int, \n"
+                + " transactionsFailed int);";
         stmt.execute(sql);
 
         //insert data
-        String sql2 = "INSERT INTO bankAccount (name, amount, currency) " + "VALUES (?,?,?)";
+        String sql2 = "INSERT INTO bankAccount (name, amount, currency, transactionsProcessed, transactionsFailed) " + "VALUES (?,?,?,?,?)";
         PreparedStatement prep = connection.prepareStatement(sql2);
         for ( Account a: accountList) {
             prep.setString(1, a.getName());
             prep.setDouble(2, a.getAmount());
             prep.setString(3, a.getCurrency());
+            prep.setInt(4, a.getTransactionsProcessed());
+            prep.setInt(5, a.getTransactionsFailed());
             prep.executeUpdate();
         }
 
@@ -148,7 +154,9 @@ public class App extends Jooby {
             String name = rs.getString("name");
             int amount = rs.getInt("amount");
             String currency = rs.getString("currency");
-            accountList.add(new Account(name, amount, currency));
+            int transactionsProcessed = rs.getInt("transactionsProcessed");
+            int transactionsFailed = rs.getInt("transactionsFailed");
+            accountList.add(new Account(name, amount, currency, transactionsProcessed, transactionsFailed));
         }
         rs.close();
         connection.close();

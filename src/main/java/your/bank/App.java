@@ -42,7 +42,7 @@ public class App extends Jooby {
         // -- End Boilerplate Setup --
 
         // Simple GET Request
-        get("/", () -> "Hello World!");
+        get("/", () -> Results.html("BankingHome"));
 
 
         // GET request which makes a call to another endpoint

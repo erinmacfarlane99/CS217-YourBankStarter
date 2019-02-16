@@ -36,7 +36,7 @@ public class AppTest {
         String result = new MockRouter(new App())
                 .get("/");
 
-        assertEquals("Hello World!", result);
+        assertEquals("Welcome to the Banking Home Screen", result);
     }
 
     @Test

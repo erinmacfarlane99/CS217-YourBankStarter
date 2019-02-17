@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 //import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class AccountTests {
 
     @Test
@@ -78,6 +80,31 @@ public class AccountTests {
         assertThrows( ArithmeticException.class, () -> a.withdraw(100));
         assertEquals(a.getTransactionsFailed(), 1);
     }
+
+    @Test
+    public void test_balanceBeforeAndAfter(){
+        Account a = new Account(10);
+        a.withdraw(5.99);
+        assertEquals(a.getBalanceBefore(), 10);
+        assertEquals(a.getBalanceAfter(), 4.01);
+        a.deposit(5.99);
+        assertEquals(a.getBalanceBefore(), 4.01);
+        assertEquals(a.getBalanceAfter(), 10);
+    }
+
+    /*@Test
+    public void test_totalTransactions() {
+        Account a = new Account(100);
+        Account b = new Account(100);
+        Account c = new Account(100);
+        a.deposit(10);
+        b.withdraw(50);
+        b.deposit(20);
+        c.withdraw(70);
+        assertEquals( getTotalTransactions(), 4);
+    }
+    */
+
 
 
 }

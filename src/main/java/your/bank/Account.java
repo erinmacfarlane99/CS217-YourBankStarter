@@ -11,6 +11,7 @@ public class Account {
     private BigDecimal amount;
     private String name;
     private String currency;
+    private int succesfulTransac, unsuccesfullTransac = 0;
 
     public String getCurrency() {
         return currency;
@@ -63,10 +64,19 @@ public class Account {
     public void withdraw(double amount) {
         if (amount <= this.amount.doubleValue()) {
             this.amount = this.amount.subtract(valueOf(amount));
+            succesfulTransac ++;
         } else {
-            throw new ArithmeticException("can't withdraw amount greater than amount");
+            System.out.println("Insufficient funds to withdraw");
+            unsuccesfullTransac ++;
         }
+    }
 
+    public int getSuccesfulTransac(Account a){
+        return a.succesfulTransac;
+    }
+
+    public int getUnSuccesfulTransac(Account a){
+        return a.unsuccesfullTransac;
     }
 
     @Override
@@ -75,6 +85,4 @@ public class Account {
                 ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
                 ", currency: " + this.getCurrency();
     }
-
-
 }

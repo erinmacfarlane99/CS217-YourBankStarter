@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import jooby.test.helpers.JoobyApp;
 import jooby.test.helpers.JoobyTest;
 import org.jooby.Jooby;
+import org.jooby.Result;
+import org.jooby.Results;
 import org.jooby.test.MockRouter;
 import org.junit.jupiter.api.Test;
 
@@ -24,19 +26,22 @@ public class AppTest {
         get("/")
                 .then()
                 .assertThat()
-//        .body(equalTo("Hello World!"))
-                .body(containsString("Hello World!"))
+                .body(containsString("Welcome to the Banking Home Screen"))
                 .statusCode(200)
-//        .contentType("text/html;charset=UTF-8");
-                .contentType("application/json;charset=UTF-8");
+       .contentType("text/html;charset=UTF-8");
+               // .contentType("application/json;charset=UTF-8");
     }
 
     @Test
     public void unitTest() throws Throwable {
-        String result = new MockRouter(new App())
-                .get("/");
 
-        assertEquals("Hello World!", result);
+        String result = new MockRouter(new App())
+                .get("/").toString();
+        assertEquals(Results.html("BankingHome").toString(), result);
+
+//        String result = new MockRouter(new App())
+//                .get("/");
+//        assertEquals("Welcome to the Banking Home Screen", result);
     }
 
     @Test

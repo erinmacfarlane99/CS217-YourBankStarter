@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import jooby.test.helpers.JoobyApp;
 import jooby.test.helpers.JoobyTest;
 import org.jooby.Jooby;
+import org.jooby.Result;
+import org.jooby.Results;
 import org.jooby.test.MockRouter;
 import org.junit.jupiter.api.Test;
 
@@ -32,9 +34,14 @@ public class AppTest {
 
     @Test
     public void unitTest() throws Throwable {
+
         String result = new MockRouter(new App())
-                .get("/");
-        assertEquals("Welcome to the Banking Home Screen", result);
+                .get("/").toString();
+        assertEquals(Results.html("BankingHome").toString(), result);
+
+//        String result = new MockRouter(new App())
+//                .get("/");
+//        assertEquals("Welcome to the Banking Home Screen", result);
     }
 
     @Test

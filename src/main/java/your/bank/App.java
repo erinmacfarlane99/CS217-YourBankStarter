@@ -27,8 +27,6 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private DataSource db;
-    //private Account[] accountList;
-
     {
         // -- Start Boilerplate Setup --
         use(new UnirestHelper());
@@ -42,8 +40,9 @@ public class App extends Jooby {
         // -- End Boilerplate Setup --
 
         // Simple GET Request
-        get("/", () -> Results.html("BankingHome"));
+        get("/", () -> Results.redirect("/Team6Bank"));
 
+        get("/Team6Bank", () -> Results.html("BankingHome"));
 
         // GET request which makes a call to another endpoint
         get("/hello", () -> {
@@ -66,11 +65,11 @@ public class App extends Jooby {
                     .put("name", name);
         });
 
-        get("/accountDetailsJSON", () -> Results.json(accountList));
+        get("/Team6Bank/accountDetailsJSON", () -> Results.json(accountList));
 
-        get("/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
+        get("/Team6Bank/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
 
-        get("/accountDetails", () ->
+        get("/Team6Bank/accountDetails", () ->
                 Results
                     .when("text/html", () -> Results.html("Accounts").put("accounts",accountList))
                     .when("application/json", () -> Results.json(accountList))

@@ -28,7 +28,7 @@ public class AppTest {
                 .assertThat()
                 .body(containsString("Welcome to the Banking Home Screen"))
                 .statusCode(200)
-       .contentType("text/html;charset=UTF-8");
+                .contentType("text/html;charset=UTF-8");
                // .contentType("application/json;charset=UTF-8");
     }
 
@@ -37,6 +37,7 @@ public class AppTest {
 
         String result = new MockRouter(new App())
                 .get("/").toString();
+
         assertEquals(Results.html("BankingHome").toString(), result);
 
 //        String result = new MockRouter(new App())

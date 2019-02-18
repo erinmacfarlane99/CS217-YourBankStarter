@@ -34,7 +34,6 @@ public class AppTest {
     public void unitTest() throws Throwable {
         String result = new MockRouter(new App())
                 .get("/");
-
         assertEquals("Welcome to the Banking Home Screen", result);
     }
 

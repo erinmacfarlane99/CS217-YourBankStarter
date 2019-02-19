@@ -36,7 +36,7 @@ public class AppTest {
     public void unitTest() throws Throwable {
 
         String result = new MockRouter(new App())
-                .get("/").toString();
+                .get("/Team6Bank").toString();
 
         assertEquals(Results.html("BankingHome").toString(), result);
 
@@ -47,7 +47,7 @@ public class AppTest {
 
     @Test
     public void TestAccountDetailsJSON() {
-        get("/accountDetailsJSON")
+        get("/Team6Bank/accountDetailsJSON")
                 .then()
                 .assertThat()
                 .statusCode(200)

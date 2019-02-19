@@ -28,7 +28,7 @@ public class AppTest {
                 .assertThat()
                 .body(containsString("Welcome to the Banking Home Screen"))
                 .statusCode(200)
-       .contentType("text/html;charset=UTF-8");
+                .contentType("text/html;charset=UTF-8");
                // .contentType("application/json;charset=UTF-8");
     }
 
@@ -36,7 +36,8 @@ public class AppTest {
     public void unitTest() throws Throwable {
 
         String result = new MockRouter(new App())
-                .get("/").toString();
+                .get("/Team6Bank").toString();
+
         assertEquals(Results.html("BankingHome").toString(), result);
 
 //        String result = new MockRouter(new App())
@@ -46,7 +47,7 @@ public class AppTest {
 
     @Test
     public void TestAccountDetailsJSON() {
-        get("/accountDetailsJSON")
+        get("/Team6Bank/accountDetailsJSON")
                 .then()
                 .assertThat()
                 .statusCode(200)

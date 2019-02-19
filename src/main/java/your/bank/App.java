@@ -26,6 +26,7 @@ import java.util.Random;
 public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
+    private List<Transaction> transactionList = new ArrayList<>();
     private DataSource db;
 
     {
@@ -83,6 +84,7 @@ public class App extends Jooby {
             db = require(DataSource.class);
 
             getAccountsFromApi();
+            getTransactionsFromApi();
             writeAccountsToDatabase();
             getAccountsFromDatabase();
 
@@ -108,6 +110,14 @@ public class App extends Jooby {
         HttpResponse<Account[]> accountsResponse =
                 Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
         accountList = Arrays.asList(accountsResponse.getBody());
+    }
+
+    private void getTransactionsFromApi () throws UnirestException {
+        HttpResponse<Transaction[]> accountsResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/auth/transaction")
+                        .basicAuth("Team6","xi35QJzheP")
+                        .asObject(Transaction[].class);
+        transactionList = Arrays.asList(accountsResponse.getBody());
     }
 
     private void writeAccountsToDatabase () throws SQLException {

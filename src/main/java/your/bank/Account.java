@@ -11,40 +11,39 @@ public class Account {
     private BigDecimal amount;
     private String name;
     private String currency;
-    //private int totalTransactions;
     private int transactionsProcessed;
     private int transactionsFailed;
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-    
     public Account() {
         name = "placeholder_name";
         amount = new BigDecimal(0);
         currency = "GBP";
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
     }
 
     public Account(double amount) {
         name = "placeholder_name";
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         currency = "GBP";
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
     }
 
     public Account(String name, double amount) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         currency = "GBP";
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
     }
 
     public Account(String name, double amount, String currency) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         this.currency = currency;
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
     }
 
     public Account(String name, double amount, String currency, int transactionsProcessed, int transactionsFailed) {
@@ -75,6 +74,15 @@ public class Account {
         return amount.doubleValue();
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+
     public void deposit(double amount) {
         this.amount = this.amount.add(valueOf(amount));
         this.transactionsProcessed++;
@@ -84,18 +92,12 @@ public class Account {
         if (amount <= this.amount.doubleValue()) {
             this.amount = this.amount.subtract(valueOf(amount));
             this.transactionsProcessed++;
-            //totalTransactions++;
         } else {
             this.transactionsFailed++;
             throw new ArithmeticException("can't withdraw amount greater than amount");
         }
 
     }
-
-    /*public int getTotalTransactions() {
-        return totalTransactions;
-    }
-    */
 
     @Override
     public String toString() {

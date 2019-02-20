@@ -55,7 +55,7 @@ public class BankingData {
         PreparedStatement prep = connection.prepareStatement(sql2);
         for ( Account a: accountList) {
             prep.setString(1, a.getName());
-            prep.setBigDecimal(2, a.getAmount());
+            prep.setDouble(2, a.getAmount());
             prep.setString(3, a.getCurrency());
             prep.setInt(4, a.getTransactionsProcessed());
             prep.setInt(5, a.getTransactionsFailed());

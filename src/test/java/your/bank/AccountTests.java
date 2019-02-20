@@ -29,7 +29,7 @@ public class AccountTests {
     public void test3_withdrawal(){
         Account a = new Account(40);
         a.withdraw(20);
-        assertEquals(a.getAmount(),20);
+        assertEquals(a.getAmount(), 20);
     }
 
     @Test

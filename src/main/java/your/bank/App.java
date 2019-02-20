@@ -88,16 +88,6 @@ public class App extends Jooby {
             transactionList = bd.getTransactionsFromApi();
             bd.writeAccountsToDatabase(accountList);
             //accountList = bd.getAccountsFromDatabase();
-
-            //test
-            for ( Account a: accountList) {
-                System.out.println(a.getName());
-                System.out.println(a.getAmount());
-                System.out.println(a.getCurrency());
-                System.out.println(a.getTransactionsProcessed());
-                System.out.println(a.getTransactionsFailed());
-            }
-
         });
 
         // Perform actions after startup

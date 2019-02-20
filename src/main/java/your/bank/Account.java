@@ -11,41 +11,59 @@ public class Account {
     private BigDecimal amount;
     private String name;
     private String currency;
+    private int transactionsProcessed;
+    private int transactionsFailed;
 
-    public String getCurrency() {
-        return currency;
-    }
-
-    public void setCurrency(String currency) {
-        this.currency = currency;
-    }
-    
     public Account() {
         name = "placeholder_name";
         amount = new BigDecimal(0);
         currency = "GBP";
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
     }
 
     public Account(double amount) {
         name = "placeholder_name";
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         currency = "GBP";
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
     }
 
     public Account(String name, double amount) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         currency = "GBP";
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
     }
 
     public Account(String name, double amount, String currency) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         this.currency = currency;
+        this.transactionsProcessed = 0;
+        this.transactionsFailed = 0;
+    }
+
+    public Account(String name, double amount, String currency, int transactionsProcessed, int transactionsFailed) {
+        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
+        this.name = name;
+        this.currency = currency;
+        this.transactionsProcessed = transactionsProcessed;
+        this.transactionsFailed = transactionsFailed;
     }
 
     public String getName() {
         return name;
+    }
+
+    public int getTransactionsFailed() {
+        return transactionsFailed;
+    }
+
+    public int getTransactionsProcessed() {
+        return transactionsProcessed;
     }
 
     public void setName(String name) {
@@ -56,14 +74,26 @@ public class Account {
         return amount.doubleValue();
     }
 
+    public String getCurrency() {
+        return currency;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
+
     public void deposit(double amount) {
         this.amount = this.amount.add(valueOf(amount));
+        this.transactionsProcessed++;
     }
 
     public void withdraw(double amount) {
         if (amount <= this.amount.doubleValue()) {
             this.amount = this.amount.subtract(valueOf(amount));
+            this.transactionsProcessed++;
         } else {
+            this.transactionsFailed++;
             throw new ArithmeticException("can't withdraw amount greater than amount");
         }
 
@@ -73,7 +103,9 @@ public class Account {
     public String toString() {
         return "Account Name: " + this.getName() +
                 ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
-                ", currency: " + this.getCurrency();
+                ", currency: " + this.getCurrency() +
+                ", transactionsProcessed: " + this.getTransactionsProcessed() +
+                ", transactionsFailed: " + this.getTransactionsFailed();
     }
 
 

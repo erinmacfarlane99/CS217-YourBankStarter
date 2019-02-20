@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import jooby.test.helpers.JoobyApp;
 import jooby.test.helpers.JoobyTest;
 import org.jooby.Jooby;
+import org.jooby.Result;
+import org.jooby.Results;
 import org.jooby.test.MockRouter;
 import org.junit.jupiter.api.Test;
 
@@ -24,24 +26,24 @@ public class AppTest {
         get("/")
                 .then()
                 .assertThat()
-//        .body(equalTo("Hello World!"))
-                .body(containsString("Hello World!"))
+                .body(containsString("Welcome to the Banking Home Screen"))
                 .statusCode(200)
-//        .contentType("text/html;charset=UTF-8");
-                .contentType("application/json;charset=UTF-8");
+                .contentType("text/html;charset=UTF-8");
     }
 
     @Test
-    public void unitTest() throws Throwable {
-        String result = new MockRouter(new App())
-                .get("/");
+    public void homepageUnitTest() throws Throwable {
 
-        assertEquals("Hello World!", result);
+        String result = new MockRouter(new App())
+                .get("/Team6Bank").toString();
+
+        assertEquals(Results.html("BankingHome").toString(), result);
+
     }
 
     @Test
     public void TestAccountDetailsJSON() {
-        get("/accountDetailsJSON")
+        get("/Team6Bank/accountDetailsJSON")
                 .then()
                 .assertThat()
                 .statusCode(200)
@@ -49,5 +51,17 @@ public class AppTest {
                 .body(containsString("amount"))
                 .body(containsString("currency"))
                 .contentType("application/json;charset=UTF-8");
+    }
+
+    @Test
+    public void TestAccountDetails() {
+        get("/Team6Bank/accountDetails")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body(containsString("Account Name"))
+                .body(containsString("Account Balance"))
+                .body(containsString("Currency"))
+                .contentType("text/html;charset=UTF-8");
     }
 }

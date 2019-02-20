@@ -27,8 +27,8 @@ import java.util.Random;
 public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
+    private List<Transaction> transactionList = new ArrayList<>();
     private DataSource db;
-    //private Account[] accountList;
 
     {
         // -- Start Boilerplate Setup --
@@ -43,7 +43,9 @@ public class App extends Jooby {
         // -- End Boilerplate Setup --
 
         // Simple GET Request
-        get("/", () -> "Hello World!");
+        get("/", () -> Results.redirect("/Team6Bank"));
+
+        get("/Team6Bank", () -> Results.html("BankingHome"));
 
 
         // GET request which makes a call to another endpoint
@@ -67,11 +69,11 @@ public class App extends Jooby {
                     .put("name", name);
         });
 
-        get("/accountDetailsJSON", () -> Results.json(accountList));
+        get("/Team6Bank/accountDetailsJSON", () -> Results.json(accountList));
 
-        get("/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
+        get("/Team6Bank/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
 
-        get("/accountDetails", () ->
+        get("/Team6Bank/accountDetails", () ->
                 Results
                     .when("text/html", () -> Results.html("Accounts").put("accounts",accountList))
                     .when("application/json", () -> Results.json(accountList))
@@ -83,7 +85,8 @@ public class App extends Jooby {
             db = require(DataSource.class);
 
             getAccountsFromApi();
-            writeAccountsToDatabase();
+            getTransactionsFromApi();
+            writeAccountsToDatabase(accountList);
             getAccountsFromDatabase();
 
             //test
@@ -91,6 +94,8 @@ public class App extends Jooby {
                 System.out.println(a.getName());
                 System.out.println(a.getAmount());
                 System.out.println(a.getCurrency());
+                System.out.println(a.getTransactionsProcessed());
+                System.out.println(a.getTransactionsFailed());
             }
 
             HttpResponse<Account> accountResponse = Unirest.get("http://your-bank.herouapp.com/api/Team6/accounts").asObject(Account.class);
@@ -111,7 +116,15 @@ public class App extends Jooby {
         accountList = Arrays.asList(accountsResponse.getBody());
     }
 
-    private void writeAccountsToDatabase () throws SQLException {
+    private void getTransactionsFromApi () throws UnirestException {
+        HttpResponse<Transaction[]> accountsResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/auth/transaction")
+                        .basicAuth("Team6","xi35QJzheP")
+                        .asObject(Transaction[].class);
+        transactionList = Arrays.asList(accountsResponse.getBody());
+    }
+
+    private void writeAccountsToDatabase (List<Account> accountList) throws SQLException {
 
         //opens a connection
         Connection connection = db.getConnection();
@@ -121,16 +134,20 @@ public class App extends Jooby {
         String sql = "CREATE TABLE IF NOT EXISTS bankAccount (\n"
                 +" name text, \n"
                 + " amount decimal, \n"
-                + " currency text);";
+                + " currency text, \n"
+                + " transactionsProcessed int, \n"
+                + " transactionsFailed int);";
         stmt.execute(sql);
 
         //insert data
-        String sql2 = "INSERT INTO bankAccount (name, amount, currency) " + "VALUES (?,?,?)";
+        String sql2 = "INSERT INTO bankAccount (name, amount, currency, transactionsProcessed, transactionsFailed) " + "VALUES (?,?,?,?,?)";
         PreparedStatement prep = connection.prepareStatement(sql2);
         for ( Account a: accountList) {
             prep.setString(1, a.getName());
             prep.setDouble(2, a.getAmount());
             prep.setString(3, a.getCurrency());
+            prep.setInt(4, a.getTransactionsProcessed());
+            prep.setInt(5, a.getTransactionsFailed());
             prep.executeUpdate();
         }
 
@@ -152,7 +169,9 @@ public class App extends Jooby {
             String name = rs.getString("name");
             int amount = rs.getInt("amount");
             String currency = rs.getString("currency");
-            accountList.add(new Account(name, amount, currency));
+            int transactionsProcessed = rs.getInt("transactionsProcessed");
+            int transactionsFailed = rs.getInt("transactionsFailed");
+            accountList.add(new Account(name, amount, currency, transactionsProcessed, transactionsFailed));
         }
         rs.close();
         connection.close();

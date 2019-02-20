@@ -29,20 +29,16 @@ public class AppTest {
                 .body(containsString("Welcome to the Banking Home Screen"))
                 .statusCode(200)
                 .contentType("text/html;charset=UTF-8");
-               // .contentType("application/json;charset=UTF-8");
     }
 
     @Test
-    public void unitTest() throws Throwable {
+    public void homepageUnitTest() throws Throwable {
 
         String result = new MockRouter(new App())
                 .get("/Team6Bank").toString();
 
         assertEquals(Results.html("BankingHome").toString(), result);
 
-//        String result = new MockRouter(new App())
-//                .get("/");
-//        assertEquals("Welcome to the Banking Home Screen", result);
     }
 
     @Test
@@ -55,5 +51,17 @@ public class AppTest {
                 .body(containsString("amount"))
                 .body(containsString("currency"))
                 .contentType("application/json;charset=UTF-8");
+    }
+
+    @Test
+    public void TestAccountDetails() {
+        get("/Team6Bank/accountDetails")
+                .then()
+                .assertThat()
+                .statusCode(200)
+                .body(containsString("Account Name"))
+                .body(containsString("Account Balance"))
+                .body(containsString("Currency"))
+                .contentType("text/html;charset=UTF-8");
     }
 }

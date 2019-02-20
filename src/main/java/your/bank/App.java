@@ -85,7 +85,7 @@ public class App extends Jooby {
 
             getAccountsFromApi();
             getTransactionsFromApi();
-            writeAccountsToDatabase();
+            writeAccountsToDatabase(accountList);
             getAccountsFromDatabase();
 
             //test
@@ -120,7 +120,7 @@ public class App extends Jooby {
         transactionList = Arrays.asList(accountsResponse.getBody());
     }
 
-    private void writeAccountsToDatabase () throws SQLException {
+    private void writeAccountsToDatabase (List<Account> accountList) throws SQLException {
 
         //opens a connection
         Connection connection = db.getConnection();

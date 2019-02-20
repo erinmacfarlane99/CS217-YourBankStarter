@@ -1,9 +1,12 @@
 package your.bank;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.math.BigDecimal;
 
 import static java.math.BigDecimal.*;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class Account {
@@ -14,36 +17,14 @@ public class Account {
     private int transactionsProcessed;
     private int transactionsFailed;
 
-    public Account() {
-        name = "placeholder_name";
-        amount = new BigDecimal(0);
-        currency = "GBP";
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
-    }
+    public Account() { new Account(0); }
 
-    public Account(double amount) {
-        name = "placeholder_name";
-        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
-        currency = "GBP";
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
-    }
+    public Account(double amount) { new Account("placeholder",amount); }
 
-    public Account(String name, double amount) {
-        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
-        this.name = name;
-        currency = "GBP";
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
-    }
+    public Account(String name, double amount) { new Account(name, amount, "GBP"); }
 
     public Account(String name, double amount, String currency) {
-        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
-        this.name = name;
-        this.currency = currency;
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
+        new Account(name,amount,currency,0,0);
     }
 
     public Account(String name, double amount, String currency, int transactionsProcessed, int transactionsFailed) {
@@ -70,8 +51,8 @@ public class Account {
         this.name = name;
     }
 
-    public double getAmount() {
-        return amount.doubleValue();
+    public BigDecimal getAmount() {
+        return amount.setScale(2, RoundingMode.HALF_EVEN);
     }
 
     public String getCurrency() {

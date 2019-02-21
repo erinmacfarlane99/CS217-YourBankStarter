@@ -78,6 +78,8 @@ public class App extends Jooby {
                     .when("application/json", () -> Results.json(accountList))
         );
 
+        get("/Team6Bank/transactionInfo", () -> Results.html("Transactions").put("accounts",accountList));
+
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");
@@ -97,6 +99,24 @@ public class App extends Jooby {
                 System.out.println(a.getTransactionsFailed());
             }
 
+            processTransactions();
+
+            for ( Account a: accountList) {
+                System.out.println(a.getName());
+                System.out.println(a.getAmount());
+                System.out.println(a.getCurrency());
+                System.out.println(a.getTransactionsProcessed());
+                System.out.println(a.getTransactionsFailed());
+            }
+
+            int totalProcessed = 0;
+            int totalFailed = 0;
+            for (Account a: accountList) {
+                totalProcessed = totalProcessed + a.getTransactionsProcessed();
+                totalFailed = totalFailed + a.getTransactionsFailed();
+            }
+            System.out.println("Total Transactions Processed: " + totalProcessed + "\n" + "Total Failed: " + totalFailed);
+
         });
 
         // Perform actions after startup
@@ -104,6 +124,36 @@ public class App extends Jooby {
             System.out.println("Started!");
         });
 
+    }
+
+    private void processTransactions() {
+        for (Transaction t : transactionList) {
+            for (Account a : accountList) {
+                if (a.getName().equals(t.getFrom())) {
+                    try {
+                        a.withdraw(t.getAmount());
+                        boolean found = false;
+                        for (Account b : accountList) {
+                            if (b.getName().equals(t.getTo())) {
+                                found = true;
+                                b.deposit(t.getAmount());
+                                a.addSuccessfulTransaction(t);
+                                b.addSuccessfulTransaction(t);
+                            }
+                        }
+                        if (found == false) {
+                            a.addFailedTransaction(t);
+                        }
+                    } catch (ArithmeticException e){
+                        for (Account b : accountList) {
+                            if (b.getName().equals(t.getTo())) {
+                                b.addFailedTransaction(t);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private void getAccountsFromApi() throws UnirestException {

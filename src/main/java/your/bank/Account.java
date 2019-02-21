@@ -5,53 +5,54 @@ import java.math.BigDecimal;
 import static java.math.BigDecimal.*;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class Account {
 
     private BigDecimal amount;
+    private ArrayList<Transaction> successfulTransactions;
+    private ArrayList<Transaction> failedTransactions;
     private String name;
     private String currency;
-    private int transactionsProcessed;
-    private int transactionsFailed;
 
     public Account() {
         name = "placeholder_name";
         amount = new BigDecimal(0);
         currency = "GBP";
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
+        successfulTransactions = new ArrayList<>();
+        failedTransactions = new ArrayList<>();
     }
 
     public Account(double amount) {
         name = "placeholder_name";
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         currency = "GBP";
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
+        successfulTransactions = new ArrayList<>();
+        failedTransactions = new ArrayList<>();
     }
 
     public Account(String name, double amount) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         currency = "GBP";
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
+        successfulTransactions = new ArrayList<>();
+        failedTransactions = new ArrayList<>();
     }
 
     public Account(String name, double amount, String currency) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         this.currency = currency;
-        this.transactionsProcessed = 0;
-        this.transactionsFailed = 0;
+        successfulTransactions = new ArrayList<>();
+        failedTransactions = new ArrayList<>();
     }
 
     public Account(String name, double amount, String currency, int transactionsProcessed, int transactionsFailed) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         this.currency = currency;
-        this.transactionsProcessed = transactionsProcessed;
-        this.transactionsFailed = transactionsFailed;
+        successfulTransactions = new ArrayList<>();
+        failedTransactions = new ArrayList<>();
     }
 
     public String getName() {
@@ -59,12 +60,10 @@ public class Account {
     }
 
     public int getTransactionsFailed() {
-        return transactionsFailed;
+        return failedTransactions.size();
     }
 
-    public int getTransactionsProcessed() {
-        return transactionsProcessed;
-    }
+    public int getTransactionsProcessed() { return successfulTransactions.size() + failedTransactions.size(); }
 
     public void setName(String name) {
         this.name = name;
@@ -82,18 +81,22 @@ public class Account {
         this.currency = currency;
     }
 
+    public void addSuccessfulTransaction(Transaction successfulTransaction) {
+        successfulTransactions.add(successfulTransaction);
+    }
+
+    public void addFailedTransaction(Transaction failedTransaction) {
+        failedTransactions.add(failedTransaction);
+    }
 
     public void deposit(double amount) {
         this.amount = this.amount.add(valueOf(amount));
-        this.transactionsProcessed++;
     }
 
     public void withdraw(double amount) {
         if (amount <= this.amount.doubleValue()) {
             this.amount = this.amount.subtract(valueOf(amount));
-            this.transactionsProcessed++;
         } else {
-            this.transactionsFailed++;
             throw new ArithmeticException("can't withdraw amount greater than amount");
         }
 

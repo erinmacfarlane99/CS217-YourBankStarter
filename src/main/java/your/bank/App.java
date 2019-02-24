@@ -27,6 +27,7 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private BankingData bd;
 
 
     {
@@ -69,34 +70,27 @@ public class App extends Jooby {
                     .put("name", name);
         });
 
-        get("/Team6Bank/accountDetailsJSON", () -> Results.json(accountList));
+        get("/Team6Bank/accountDetailsJSON", () -> Results.json(bd.getAccountsFromDatabase()));
 
-        get("/Team6Bank/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
-
-        get("/Team6Bank/accountDetails", () ->
-                Results
-                    .when("text/html", () -> Results.html("Accounts").put("accounts",accountList))
-                    .when("application/json", () -> Results.json(accountList))
-        );
+        get("/Team6Bank/accountDetailsTable", () -> Results.html("Accounts").put("accounts",bd.getAccountsFromDatabase()));
 
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");
-            BankingData bd = new BankingData (require (DataSource.class));
+             bd = new BankingData (require (DataSource.class));
 
             accountList = bd.getAccountsFromApi();
             transactionList = bd.getTransactionsFromApi();
             bd.writeAccountsToDatabase(accountList);
-            //accountList = bd.getAccountsFromDatabase();
         });
 
         // Perform actions after startup
         onStarted(() -> {
             System.out.println("Started!");
         });
-        
+
     }
-    
+
     public static void main(final String[] args) {
         run(App::new, args);
     }

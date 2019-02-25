@@ -56,7 +56,7 @@ public class Transaction {
         else if (name.equals(to)) {
             return toStartingAmount;
         }
-        return 0;
+        return -1.0;
     }
 
     public String getFrom() {

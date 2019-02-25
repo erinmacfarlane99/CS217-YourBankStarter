@@ -72,7 +72,7 @@ public class Account {
         if (successfulTransactions.size() > 0) {
             return successfulTransactions.get(0).getStartingAmount(this.getName());
         }
-        return 0;
+        return this.amount.doubleValue();
     }
 
     public void setName(String name) {
@@ -132,19 +132,12 @@ public class Account {
 
     @Override
     public String toString() {
-        if (successfulTransactions.size() == 0) {
             return "Account Name: " + this.getName() +
                     ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
                     ", currency: " + this.getCurrency() +
                     ", numberTransactionsProcessed: " + this.getNumberTransactionsProcessed() +
-                    ", numberTransactionsFailed: " + this.getNumberTransactionsFailed();
-        }
-        return "Account Name: " + this.getName() +
-                ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
-                ", currency: " + this.getCurrency() +
-                ", numberTransactionsProcessed: " + this.getNumberTransactionsProcessed() +
-                ", numberTransactionsFailed: " + this.getNumberTransactionsFailed() +
-                ", initialAmount: " + this.getSuccessfulTransactions().get(0).getStartingAmount(this.getName());
+                    ", numberTransactionsFailed: " + this.getNumberTransactionsFailed() +
+                    ", initialAmount: " + getInitialAmount();
     }
 
 

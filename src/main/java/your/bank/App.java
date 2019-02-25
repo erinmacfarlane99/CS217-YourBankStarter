@@ -85,6 +85,7 @@ public class App extends Jooby {
         onStart(() -> {
             System.out.println("Starting Up...");
             db = require(DataSource.class);
+            TransactionProcessor tp = new TransactionProcessor();
 
             getAccountsFromApi();
             getTransactionsFromApi();
@@ -100,8 +101,9 @@ public class App extends Jooby {
                 System.out.println(a.getNumberTransactionsFailed());
             }
 
-            processTransactions();
-            calculateTotals();
+            tp.processTransactionList(transactionList, accountList);
+            totals[0] = tp.getTotalTransactions();
+            totals[1] = tp.getFailedTransactions();
         });
 
         // Perform actions after startup
@@ -109,45 +111,6 @@ public class App extends Jooby {
             System.out.println("Started!");
         });
 
-    }
-
-    private void processTransactions() {
-        for (Transaction t : transactionList) {
-            for (Account a : accountList) {
-                if (a.getName().equals(t.getFrom())) {
-                    try {
-                        a.withdraw(t);
-                        boolean found = false;
-                        for (Account b : accountList) {
-                            if (b.getName().equals(t.getTo())) {
-                                found = true;
-                                b.deposit(t);
-                            }
-                        }
-                        if (!found) {
-                            a.addFailedTransaction(t);
-                        }
-                    } catch (ArithmeticException e){
-                        for (Account b : accountList) {
-                            if (b.getName().equals(t.getTo())) {
-                                b.addFailedTransaction(t);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void calculateTotals() {
-        int totalProcessed = 0;
-        int totalFailed = 0;
-        for (Account a: accountList) {
-            totalProcessed = totalProcessed + a.getNumberTransactionsProcessed();
-            totalFailed = totalFailed + a.getNumberTransactionsFailed();
-        }
-        totals[0] = totalProcessed;
-        totals[1] = totalFailed;
     }
 
     private void getAccountsFromApi() throws UnirestException {

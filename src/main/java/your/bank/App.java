@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.sql.*;
 import javax.sql.DataSource;
+import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -97,6 +98,9 @@ public class App extends Jooby {
                 System.out.println(a.getTransactionsFailed());
             }
 
+            HttpResponse<Account> accountResponse = Unirest.get("http://your-bank.herouapp.com/api/Team6/accounts").asObject(Account.class);
+            Account accountObject = accountResponse.getBody();
+
         });
 
         // Perform actions after startup
@@ -179,6 +183,7 @@ public class App extends Jooby {
 
 
     public static void main(final String[] args) {
+
         run(App::new, args);
     }
 

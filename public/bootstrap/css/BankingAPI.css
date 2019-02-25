@@ -1,0 +1,20 @@
+
+li{
+    list-style:none;
+}
+
+a:{
+    color:LightSkyBlue;
+}
+
+h3{
+    background-color:LightSkyBlue;
+    color:White;
+    text-align:center;
+    padding-bottom:5px;
+    position:fixed;
+    top: 0;
+    left:0;
+    right:0;
+    align-items:center;
+}

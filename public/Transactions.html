@@ -8,6 +8,7 @@
 </head>
 <body>
 
+<h3>{{totalProcessed}} Transactions Processed in Total, {{totalFailed}} Transactions Failed</h3>
 <table>
     <tr>
         <th>Account Name  </th>
@@ -23,8 +24,8 @@
         <td>{{initialAmount}}</td>
         <td>{{amount}}</td>
         <td>{{currency}}</td>
-        <td>{{transactionsProcessed}}</td>
-        <td>{{transactionsFailed}}</td>
+        <td>{{numberTransactionsProcessed}}</td>
+        <td>{{numberTransactionsFailed}}</td>
     </tr>
     {{/accounts}}
 </table>

@@ -51,15 +51,29 @@ public class Account {
         return name;
     }
 
-    public ArrayList<Transaction> getSuccessfulTransactions() { return successfulTransactions; }
+    public ArrayList<Transaction> getSuccessfulTransactions() {
+        return successfulTransactions;
+    }
 
-    public ArrayList<Transaction> getFailedTransactions() { return failedTransactions; }
+    public ArrayList<Transaction> getFailedTransactions() {
+        return failedTransactions;
+    }
+
 
     public int getNumberTransactionsFailed() {
         return failedTransactions.size();
     }
 
-    public int getNumberTransactionsProcessed() { return successfulTransactions.size() + failedTransactions.size(); }
+    public int getNumberTransactionsProcessed() {
+        return successfulTransactions.size() + failedTransactions.size();
+    }
+
+    public double getInitialAmount() {
+        if (successfulTransactions.size() > 0) {
+            return successfulTransactions.get(0).getStartingAmount(this.getName());
+        }
+        return 0;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -118,11 +132,19 @@ public class Account {
 
     @Override
     public String toString() {
+        if (successfulTransactions.size() == 0) {
+            return "Account Name: " + this.getName() +
+                    ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
+                    ", currency: " + this.getCurrency() +
+                    ", numberTransactionsProcessed: " + this.getNumberTransactionsProcessed() +
+                    ", numberTransactionsFailed: " + this.getNumberTransactionsFailed();
+        }
         return "Account Name: " + this.getName() +
                 ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
                 ", currency: " + this.getCurrency() +
-                ", transactionsProcessed: " + this.getNumberTransactionsFailed() +
-                ", transactionsFailed: " + this.getNumberTransactionsFailed();
+                ", numberTransactionsProcessed: " + this.getNumberTransactionsProcessed() +
+                ", numberTransactionsFailed: " + this.getNumberTransactionsFailed() +
+                ", initialAmount: " + this.getSuccessfulTransactions().get(0).getStartingAmount(this.getName());
     }
 
 

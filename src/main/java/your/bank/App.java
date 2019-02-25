@@ -27,6 +27,7 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private int[] totals = new int[2];
     private DataSource db;
 
     {
@@ -78,7 +79,7 @@ public class App extends Jooby {
                     .when("application/json", () -> Results.json(accountList))
         );
 
-        get("/Team6Bank/transactionInfo", () -> Results.html("Transactions").put("accounts",accountList));
+        get("/Team6Bank/transactionInfo", () -> Results.html("Transactions").put("accounts",accountList).put("totalProcessed", totals[0]).put("totalFailed", totals[1]));
 
         // Perform actions on startup
         onStart(() -> {
@@ -99,30 +100,8 @@ public class App extends Jooby {
                 System.out.println(a.getNumberTransactionsFailed());
             }
 
-            System.out.println("#################");
-            System.out.println(accountList.get(accountList.size()-1).getAmount());
-            System.out.println("#################");
             processTransactions();
-
-            for ( Account a: accountList) {
-                System.out.println(a.getName());
-                if (!a.getSuccessfulTransactions().isEmpty()){
-                    System.out.println(a.getSuccessfulTransactions().get(0).getStartingAmount(a.getName()));
-                }
-                System.out.println(a.getAmount());
-                System.out.println(a.getCurrency());
-                System.out.println(a.getNumberTransactionsProcessed());
-                System.out.println(a.getNumberTransactionsFailed());
-            }
-
-            int totalProcessed = 0;
-            int totalFailed = 0;
-            for (Account a: accountList) {
-                totalProcessed = totalProcessed + a.getNumberTransactionsProcessed();
-                totalFailed = totalFailed + a.getNumberTransactionsFailed();
-            }
-            System.out.println("Total Transactions Processed: " + totalProcessed + "\n" + "Total Failed: " + totalFailed);
-
+            calculateTotals();
         });
 
         // Perform actions after startup
@@ -158,6 +137,17 @@ public class App extends Jooby {
                 }
             }
         }
+    }
+
+    private void calculateTotals() {
+        int totalProcessed = 0;
+        int totalFailed = 0;
+        for (Account a: accountList) {
+            totalProcessed = totalProcessed + a.getNumberTransactionsProcessed();
+            totalFailed = totalFailed + a.getNumberTransactionsFailed();
+        }
+        totals[0] = totalProcessed;
+        totals[1] = totalFailed;
     }
 
     private void getAccountsFromApi() throws UnirestException {
@@ -223,7 +213,6 @@ public class App extends Jooby {
         }
         rs.close();
         connection.close();
-
     }
 
 

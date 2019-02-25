@@ -171,6 +171,9 @@ public class App extends Jooby {
         }
         rs.close();
         connection.close();
+    }
+
+    private boolean searchAccountFromDB(Account a) throws SQLException{
 
     }
 

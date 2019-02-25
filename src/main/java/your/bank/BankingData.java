@@ -35,6 +35,18 @@ public class BankingData {
         return Arrays.asList(accountsResponse.getBody());
     }
 
+    public void clearAccountsFromDatabase() throws SQLException {
+        //opens a connection
+        Connection connection = db.getConnection();
+
+        //create a table
+        Statement stmt = connection.createStatement();
+        String sql = "DELETE FROM bankAccount";
+        stmt.execute(sql);
+
+        connection.close();
+    }
+
     public void writeAccountsToDatabase (List<Account> accountList) throws SQLException {
 
         //opens a connection

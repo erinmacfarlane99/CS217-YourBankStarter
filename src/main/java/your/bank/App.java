@@ -95,25 +95,31 @@ public class App extends Jooby {
                 System.out.println(a.getName());
                 System.out.println(a.getAmount());
                 System.out.println(a.getCurrency());
-                System.out.println(a.getTransactionsProcessed());
-                System.out.println(a.getTransactionsFailed());
+                System.out.println(a.getNumberTransactionsProcessed());
+                System.out.println(a.getNumberTransactionsFailed());
             }
 
+            System.out.println("#################");
+            System.out.println(accountList.get(accountList.size()-1).getAmount());
+            System.out.println("#################");
             processTransactions();
 
             for ( Account a: accountList) {
                 System.out.println(a.getName());
+                if (!a.getSuccessfulTransactions().isEmpty()){
+                    System.out.println(a.getSuccessfulTransactions().get(0).getStartingAmount(a.getName()));
+                }
                 System.out.println(a.getAmount());
                 System.out.println(a.getCurrency());
-                System.out.println(a.getTransactionsProcessed());
-                System.out.println(a.getTransactionsFailed());
+                System.out.println(a.getNumberTransactionsProcessed());
+                System.out.println(a.getNumberTransactionsFailed());
             }
 
             int totalProcessed = 0;
             int totalFailed = 0;
             for (Account a: accountList) {
-                totalProcessed = totalProcessed + a.getTransactionsProcessed();
-                totalFailed = totalFailed + a.getTransactionsFailed();
+                totalProcessed = totalProcessed + a.getNumberTransactionsProcessed();
+                totalFailed = totalFailed + a.getNumberTransactionsFailed();
             }
             System.out.println("Total Transactions Processed: " + totalProcessed + "\n" + "Total Failed: " + totalFailed);
 
@@ -131,17 +137,15 @@ public class App extends Jooby {
             for (Account a : accountList) {
                 if (a.getName().equals(t.getFrom())) {
                     try {
-                        a.withdraw(t.getAmount());
+                        a.withdraw(t);
                         boolean found = false;
                         for (Account b : accountList) {
                             if (b.getName().equals(t.getTo())) {
                                 found = true;
-                                b.deposit(t.getAmount());
-                                a.addSuccessfulTransaction(t);
-                                b.addSuccessfulTransaction(t);
+                                b.deposit(t);
                             }
                         }
-                        if (found == false) {
+                        if (!found) {
                             a.addFailedTransaction(t);
                         }
                     } catch (ArithmeticException e){
@@ -192,8 +196,8 @@ public class App extends Jooby {
             prep.setString(1, a.getName());
             prep.setDouble(2, a.getAmount());
             prep.setString(3, a.getCurrency());
-            prep.setInt(4, a.getTransactionsProcessed());
-            prep.setInt(5, a.getTransactionsFailed());
+            prep.setInt(4, a.getNumberTransactionsProcessed());
+            prep.setInt(5, a.getNumberTransactionsFailed());
             prep.executeUpdate();
         }
 
@@ -215,9 +219,7 @@ public class App extends Jooby {
             String name = rs.getString("name");
             int amount = rs.getInt("amount");
             String currency = rs.getString("currency");
-            int transactionsProcessed = rs.getInt("transactionsProcessed");
-            int transactionsFailed = rs.getInt("transactionsFailed");
-            accountList.add(new Account(name, amount, currency, transactionsProcessed, transactionsFailed));
+            accountList.add(new Account(name, amount, currency));
         }
         rs.close();
         connection.close();

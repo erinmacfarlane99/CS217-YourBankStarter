@@ -11,6 +11,7 @@
 <table>
     <tr>
         <th>Account Name  </th>
+        <th>Account Balance Before</th>
         <th>Account Balance </th>
         <th>Currency  </th>
         <th>Total Transactions Processed  </th>
@@ -19,6 +20,7 @@
     {{#accounts}}
     <tr>
         <td>{{name}}</td>
+        <td>{{initialAmount}}</td>
         <td>{{amount}}</td>
         <td>{{currency}}</td>
         <td>{{transactionsProcessed}}</td>

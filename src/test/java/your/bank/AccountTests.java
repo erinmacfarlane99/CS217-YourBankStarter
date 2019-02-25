@@ -65,17 +65,18 @@ public class AccountTests {
 
     @Test
     public void test_2ProcessedTransactions(){
+
         Account a = new Account(40);
         a.deposit(20);
         a.withdraw(20);
-        assertEquals(a.getTransactionsProcessed(), 2);
+        assertEquals(a.getNumberTransactionsProcessed(), 2);
     }
 
     @Test
     public void test_1FailedTransaction(){
         Account a = new Account(20);
         assertThrows( ArithmeticException.class, () -> a.withdraw(100));
-        assertEquals(a.getTransactionsFailed(), 1);
+        assertEquals(a.getNumberTransactionsFailed(), 1);
     }
 
 

@@ -19,19 +19,20 @@ h3{
     align-items:center;
 }
 
-ul.list {
+/*ul.pagination li{
   display: inline-block;
 }
 
-ul.list li {
+ul.pagination li {
   color: black;
   float: left;
   padding: 8px 16px;
   text-decoration: none;
 }
 
+*/
 body{
-    background-color:LightGray
+    background-color:LightGray;
 }
 
 ul{

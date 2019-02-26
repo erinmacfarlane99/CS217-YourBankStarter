@@ -96,7 +96,8 @@ public class Account {
     }
 
     public void deposit(double amount) {
-        Transaction t = new Transaction(null, amount, null, null);
+        Transaction t = new Transaction(null, amount, null, this.name);
+        t.setToStartingAmount(this.amount.doubleValue());
         this.amount = this.amount.add(valueOf(amount));
         successfulTransactions.add(t);
     }
@@ -108,8 +109,9 @@ public class Account {
     }
 
     public void withdraw(double amount) {
-        Transaction t = new Transaction(null, amount, null, null);
+        Transaction t = new Transaction(null, amount, this.name, null);
         if (amount <= this.amount.doubleValue()) {
+            t.setFromStartingAmount(this.amount.doubleValue());
             this.amount = this.amount.subtract(valueOf(amount));
             successfulTransactions.add(t);
         } else {

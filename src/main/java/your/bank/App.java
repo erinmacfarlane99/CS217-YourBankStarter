@@ -104,6 +104,7 @@ public class App extends Jooby {
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
+
         });
 
         // Perform actions after startup

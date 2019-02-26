@@ -74,9 +74,8 @@ public class AccountTests {
     @Test
     public void test_1FailedTransaction(){
         Account a = new Account(20);
-        assertThrows( ArithmeticException.class, () -> a.withdraw(100));
+        assertThrows( ArithmeticException.class, () -> a.withdraw(100.00));
         assertEquals(a.getTransactionsFailed(), 1);
     }
-
 
 }

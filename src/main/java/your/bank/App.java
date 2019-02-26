@@ -177,9 +177,10 @@ public class App extends Jooby {
         connection.close();
     }
 
+    /*
     private boolean searchAccountFromDB(Account a) throws SQLException{
 
-    }
+    }*/
 
 
     public static void main(final String[] args) {

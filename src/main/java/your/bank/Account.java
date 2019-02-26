@@ -95,7 +95,7 @@ public class Account {
             this.succesfulTransac ++;
             this.transactionsProcessed++;
         } else{
-            this.unsuccesfullTransac ++;
+            this.unsuccesfullTransac += 1;
             throw new ArithmeticException("can't withdraw amount greater than amount");
         }
     }

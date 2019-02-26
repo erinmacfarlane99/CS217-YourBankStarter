@@ -55,7 +55,7 @@ public class AppTest {
 
     @Test
     public void TestAccountDetails() {
-        get("/Team6Bank/accountDetails")
+        get("/Team6Bank/accountDetailsTable")
                 .then()
                 .assertThat()
                 .statusCode(200)

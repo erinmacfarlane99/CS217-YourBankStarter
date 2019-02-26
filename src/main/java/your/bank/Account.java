@@ -44,7 +44,6 @@ public class Account {
         return failedTransactions;
     }
 
-
     public int getNumberTransactionsFailed() {
         return failedTransactions.size();
     }

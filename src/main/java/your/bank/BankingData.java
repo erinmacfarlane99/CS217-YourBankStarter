@@ -57,20 +57,18 @@ public class BankingData {
         String sql = "CREATE TABLE IF NOT EXISTS bankAccount (\n"
                 +" name text, \n"
                 + " amount decimal, \n"
-                + " currency text, \n"
-                + " transactionsProcessed int, \n"
-                + " transactionsFailed int);";
+                + " currency text);";
         stmt.execute(sql);
 
         //insert data
-        String sql2 = "INSERT INTO bankAccount (name, amount, currency, transactionsProcessed, transactionsFailed) " + "VALUES (?,?,?,?,?)";
+        String sql2 = "INSERT INTO bankAccount (name, amount, currency) " + "VALUES (?,?,?)";
         PreparedStatement prep = connection.prepareStatement(sql2);
         for ( Account a: accountList) {
             prep.setString(1, a.getName());
             prep.setDouble(2, a.getAmount());
             prep.setString(3, a.getCurrency());
-            prep.setInt(4, a.getTransactionsProcessed());
-            prep.setInt(5, a.getTransactionsFailed());
+            //prep.setInt(4, a.getNumberTransactionsProcessed());
+            //prep.setInt(5, a.getNumberTransactionsFailed());
             prep.executeUpdate();
         }
 
@@ -91,9 +89,7 @@ public class BankingData {
             String name = rs.getString("name");
             double amount = rs.getDouble("amount");
             String currency = rs.getString("currency");
-            int transactionsProcessed = rs.getInt("transactionsProcessed");
-            int transactionsFailed = rs.getInt("transactionsFailed");
-            accountList.add(new Account(name, amount, currency, transactionsProcessed, transactionsFailed));
+            accountList.add(new Account(name, amount, currency));
         }
 
         rs.close();

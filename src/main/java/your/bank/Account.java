@@ -25,10 +25,6 @@ public class Account {
     public Account(String name, double amount) { this(name, amount, "GBP"); }
 
     public Account(String name, double amount, String currency) {
-        this(name,amount,currency,0,0);
-    }
-
-    public Account(String name, double amount, String currency, int transactionsProcessed, int transactionsFailed) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
         this.name = name;
         this.currency = currency;
@@ -118,7 +114,6 @@ public class Account {
             failedTransactions.add(t);
             throw new ArithmeticException("can't withdraw amount greater than amount");
         }
-
     }
 
     @Override

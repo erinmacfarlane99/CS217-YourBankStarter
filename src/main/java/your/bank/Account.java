@@ -1,9 +1,12 @@
 package your.bank;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.math.BigDecimal;
 
 import static java.math.BigDecimal.*;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -15,29 +18,11 @@ public class Account {
     private String name;
     private String currency;
 
-    public Account() {
-        name = "placeholder_name";
-        amount = new BigDecimal(0);
-        currency = "GBP";
-        successfulTransactions = new ArrayList<>();
-        failedTransactions = new ArrayList<>();
-    }
+    public Account() { this(0); }
 
-    public Account(double amount) {
-        name = "placeholder_name";
-        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
-        currency = "GBP";
-        successfulTransactions = new ArrayList<>();
-        failedTransactions = new ArrayList<>();
-    }
+    public Account(double amount) { this("placeholder",amount); }
 
-    public Account(String name, double amount) {
-        this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
-        this.name = name;
-        currency = "GBP";
-        successfulTransactions = new ArrayList<>();
-        failedTransactions = new ArrayList<>();
-    }
+    public Account(String name, double amount) { this(name, amount, "GBP"); }
 
     public Account(String name, double amount, String currency) {
         this.amount = (amount >= 0) ? new BigDecimal(amount) : new BigDecimal(0);
@@ -129,7 +114,6 @@ public class Account {
             failedTransactions.add(t);
             throw new ArithmeticException("can't withdraw amount greater than amount");
         }
-
     }
 
     @Override

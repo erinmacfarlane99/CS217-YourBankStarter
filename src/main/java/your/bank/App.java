@@ -27,6 +27,7 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private int[] totals = new int[2];
     private DataSource db;
 
     {
@@ -78,10 +79,13 @@ public class App extends Jooby {
                     .when("application/json", () -> Results.json(accountList))
         );
 
+        get("/Team6Bank/transactionInfo", () -> Results.html("Transactions").put("accounts",accountList).put("totalProcessed", totals[0]).put("totalFailed", totals[1]));
+
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");
             db = require(DataSource.class);
+            TransactionProcessor tp = new TransactionProcessor();
 
             getAccountsFromApi();
             getTransactionsFromApi();
@@ -93,10 +97,13 @@ public class App extends Jooby {
                 System.out.println(a.getName());
                 System.out.println(a.getAmount());
                 System.out.println(a.getCurrency());
-                System.out.println(a.getTransactionsProcessed());
-                System.out.println(a.getTransactionsFailed());
+                System.out.println(a.getNumberTransactionsProcessed());
+                System.out.println(a.getNumberTransactionsFailed());
             }
 
+            tp.processTransactionList(transactionList, accountList);
+            totals[0] = tp.getTotalTransactions();
+            totals[1] = tp.getFailedTransactions();
         });
 
         // Perform actions after startup
@@ -142,8 +149,8 @@ public class App extends Jooby {
             prep.setString(1, a.getName());
             prep.setDouble(2, a.getAmount());
             prep.setString(3, a.getCurrency());
-            prep.setInt(4, a.getTransactionsProcessed());
-            prep.setInt(5, a.getTransactionsFailed());
+            prep.setInt(4, a.getNumberTransactionsProcessed());
+            prep.setInt(5, a.getNumberTransactionsFailed());
             prep.executeUpdate();
         }
 
@@ -165,13 +172,10 @@ public class App extends Jooby {
             String name = rs.getString("name");
             int amount = rs.getInt("amount");
             String currency = rs.getString("currency");
-            int transactionsProcessed = rs.getInt("transactionsProcessed");
-            int transactionsFailed = rs.getInt("transactionsFailed");
-            accountList.add(new Account(name, amount, currency, transactionsProcessed, transactionsFailed));
+            accountList.add(new Account(name, amount, currency));
         }
         rs.close();
         connection.close();
-
     }
 
 

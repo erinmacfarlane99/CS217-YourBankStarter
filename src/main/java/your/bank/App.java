@@ -88,23 +88,9 @@ public class App extends Jooby {
 
             bd = new BankingData (require (DataSource.class));
 
-            accountList = bd.getAccountsFromApi();
-            transactionList = bd.getTransactionsFromApi();
+            accountList = getAccountsFromApi();
+            transactionList = getTransactionsFromApi();
             bd.writeAccountsToDatabase(accountList);
-
-//            getAccountsFromApi();
-//            getTransactionsFromApi();
-//            writeAccountsToDatabase(accountList);
-//            getAccountsFromDatabase();
-
-//            //test
-//            for ( Account a: accountList) {
-//                System.out.println(a.getName());
-//                System.out.println(a.getAmount());
-//                System.out.println(a.getCurrency());
-//                System.out.println(a.getNumberTransactionsProcessed());
-//                System.out.println(a.getNumberTransactionsFailed());
-//            }
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
@@ -115,7 +101,20 @@ public class App extends Jooby {
         onStarted(() -> {
             System.out.println("Started!");
         });
+    }
 
+    public List<Account> getAccountsFromApi() throws UnirestException {
+        HttpResponse<Account[]> accountsResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
+        return Arrays.asList(accountsResponse.getBody());
+    }
+
+    public List<Transaction> getTransactionsFromApi () throws UnirestException {
+        HttpResponse<Transaction[]> accountsResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/auth/transaction")
+                        .basicAuth("Team6","xi35QJzheP")
+                        .asObject(Transaction[].class);
+        return Arrays.asList(accountsResponse.getBody());
     }
 
     public static void main(final String[] args) {

@@ -21,20 +21,6 @@ public class BankingData {
         this.db = db;
     }
 
-    public List<Account> getAccountsFromApi() throws UnirestException {
-        HttpResponse<Account[]> accountsResponse =
-                Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
-        return Arrays.asList(accountsResponse.getBody());
-    }
-
-    public List<Transaction> getTransactionsFromApi () throws UnirestException {
-        HttpResponse<Transaction[]> accountsResponse =
-                Unirest.get("http://your-bank.herokuapp.com/api/Team6/auth/transaction")
-                        .basicAuth("Team6","xi35QJzheP")
-                        .asObject(Transaction[].class);
-        return Arrays.asList(accountsResponse.getBody());
-    }
-
     public void clearAccountsFromDatabase() throws SQLException {
         //opens a connection
         Connection connection = db.getConnection();

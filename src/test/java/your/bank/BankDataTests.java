@@ -24,7 +24,7 @@ public class BankDataTests {
     }
 
     @Test
-    public void accountsFromDatabaseTest() throws UnirestException, SQLException {
+    public void insertingAccountListTest() throws UnirestException, SQLException {
         List<Account> acl = new ArrayList<>();
         acl.add(new Account("bill",50));
         acl.add(new Account("bob",345.53));
@@ -35,6 +35,21 @@ public class BankDataTests {
     }
 
     @Test
-    public void accountsFromApiTest() throws UnirestException, SQLException {
+    public void insertingSingleAccountTest() throws UnirestException, SQLException {
+        bd.writeAccountToDatabase(new Account("bill",50));
+        long length = bd.getAccountsFromDatabase().size();
+        assertEquals(1,length);
     }
+
+    @Test
+    public void insertingMultipleAccountTest() throws UnirestException, SQLException {
+        for (int i = 0; i < 20; i++){
+            bd.writeAccountToDatabase(new Account("bill",50));
+
+        }
+
+        long length = bd.getAccountsFromDatabase().size();
+        assertEquals(20,length);
+    }
+
 }

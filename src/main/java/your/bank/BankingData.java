@@ -61,6 +61,12 @@ public class BankingData {
         connection.close();
     }
 
+    public void writeAccountToDatabase (Account account) throws SQLException {
+        List<Account> accs = new ArrayList<>();
+        accs.add(account);
+        writeAccountsToDatabase(accs);
+    }
+
     public List<Account> getAccountsFromDatabase () throws SQLException {
         Connection connection = db.getConnection();
 

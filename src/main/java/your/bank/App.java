@@ -118,6 +118,10 @@ public class App extends Jooby {
 
     }
 
+    public void searchDataBase(){
+        PreparedStatement sqlStatement = db.prepare
+    }
+
     public static void main(final String[] args) {
         run(App::new, args);
     }

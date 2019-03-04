@@ -62,5 +62,4 @@ public class AccountTests {
         Account a = new Account(-50);
         assertEquals(a.getAmount(),0);
     }
-
 }

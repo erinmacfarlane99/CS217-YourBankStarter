@@ -14,8 +14,10 @@ public class TransactionProcessor {
 
     public void processTransactionList(List<Transaction> transactionList, List<Account> accountList) {
         for (Transaction t : transactionList) {
+            boolean foundName = false;
             for (Account a : accountList) {
                 if (a.getName().equals(t.getFrom())) {
+                    foundName = true;
                     try {
                         boolean found = false;
                         for (Account b : accountList) {
@@ -24,7 +26,6 @@ public class TransactionProcessor {
                                 a.withdraw(t);
                                 b.deposit(t);
                                 successfulTransactions++;
-                                successfulTransactions++;
                             }
                         }
                         if (!found) {
@@ -32,15 +33,17 @@ public class TransactionProcessor {
                             failedTransactions++;
                         }
                     } catch (ArithmeticException e){
+                        failedTransactions++;
                         for (Account b : accountList) {
                             if (b.getName().equals(t.getTo())) {
                                 b.addFailedTransaction(t);
-                                failedTransactions++;
-                                failedTransactions++;
                             }
                         }
                     }
                 }
+            }
+            if (!foundName) {
+                failedTransactions++;
             }
         }
     }
@@ -52,7 +55,6 @@ public class TransactionProcessor {
                     fromAccount.withdraw(t);
                     toAccount.deposit(t);
                     successfulTransactions++;
-                    successfulTransactions++;
                 }
                 else {
                     fromAccount.addFailedTransaction(t);
@@ -62,10 +64,12 @@ public class TransactionProcessor {
             } catch (ArithmeticException e){
                 if (toAccount.getName().equals(t.getTo())) {
                     toAccount.addFailedTransaction(t);
-                    failedTransactions++;
-                    failedTransactions++;
                 }
+                failedTransactions++;
             }
+        }
+        else {
+            failedTransactions++;
         }
     }
 

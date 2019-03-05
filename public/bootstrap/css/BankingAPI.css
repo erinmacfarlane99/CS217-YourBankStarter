@@ -1,0 +1,41 @@
+
+li{
+    list-style:none;
+}
+
+a:{
+    color:LightSkyBlue;
+}
+
+h3{
+    background-color:LightSkyBlue;
+    color:White;
+    text-align:center;
+    padding-bottom:5px;
+    position:fixed;
+    top: 0;
+    left:0;
+    right:0;
+    align-items:center;
+}
+
+/*ul.pagination li{
+  display: inline-block;
+}
+
+ul.pagination li {
+  color: black;
+  float: left;
+  padding: 8px 16px;
+  text-decoration: none;
+}
+
+*/
+body{
+    background-color:LightGray;
+}
+
+ul{
+    text-align:center;margin:5%30%70%30%;padding:20px;background-color:white
+}
+

@@ -1,17 +1,15 @@
 package your.bank;
 
-import static io.restassured.RestAssured.get;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
-
 import jooby.test.helpers.JoobyApp;
 import jooby.test.helpers.JoobyTest;
 import org.jooby.Jooby;
-import org.jooby.Result;
 import org.jooby.Results;
 import org.jooby.test.MockRouter;
 import org.junit.jupiter.api.Test;
+
+import static io.restassured.RestAssured.get;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // This test requires Jooby to be running
 @JoobyTest
@@ -55,7 +53,7 @@ public class AppTest {
 
     @Test
     public void TestAccountDetails() {
-        get("/Team6Bank/accountDetails")
+        get("/Team6Bank/accountDetailsTable")
                 .then()
                 .assertThat()
                 .statusCode(200)

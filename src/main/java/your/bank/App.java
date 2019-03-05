@@ -28,7 +28,10 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private int[] totals = new int[2];
     private DataSource db;
+    private BankingData bd;
+
 
     {
         // -- Start Boilerplate Setup --
@@ -36,6 +39,7 @@ public class App extends Jooby {
         use(new Hbs());
         use(new Jackson());
         use(new Jdbc("db"));
+
 
         assets("/bootstrap/**");
         assets("/static/**");
@@ -69,34 +73,42 @@ public class App extends Jooby {
                     .put("name", name);
         });
 
-        get("/Team6Bank/accountDetailsJSON", () -> Results.json(accountList));
+        get("/Team6Bank/accountDetailsJSON", () -> Results.json(bd.getAccountsFromDatabase()));
 
-        get("/Team6Bank/accountDetailsTable", () -> Results.html("Accounts").put("accounts",accountList));
+        get("/Team6Bank/accountDetailsTable", () -> Results.html("Accounts").put("accounts",bd.getAccountsFromDatabase()));
 
-        get("/Team6Bank/accountDetails", () ->
-                Results
-                    .when("text/html", () -> Results.html("Accounts").put("accounts",accountList))
-                    .when("application/json", () -> Results.json(accountList))
-        );
+        get("/Team6Bank/transactionInfo", () ->
+                Results.html("Transactions").put("accounts",accountList).put("totalProcessed", totals[0]).put("totalFailed", totals[1]));
 
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");
+
             db = require(DataSource.class);
+            TransactionProcessor tp = new TransactionProcessor();
 
-            getAccountsFromApi();
-            getTransactionsFromApi();
-            writeAccountsToDatabase(accountList);
-            getAccountsFromDatabase();
+            bd = new BankingData (require (DataSource.class));
 
-            //test
-            for ( Account a: accountList) {
-                System.out.println(a.getName());
-                System.out.println(a.getAmount());
-                System.out.println(a.getCurrency());
-                System.out.println(a.getTransactionsProcessed());
-                System.out.println(a.getTransactionsFailed());
-            }
+            accountList = bd.getAccountsFromApi();
+            transactionList = bd.getTransactionsFromApi();
+            bd.writeAccountsToDatabase(accountList);
+
+//            getAccountsFromApi();
+//            getTransactionsFromApi();
+//            writeAccountsToDatabase(accountList);
+//            getAccountsFromDatabase();
+
+//            //test
+//            for ( Account a: accountList) {
+//                System.out.println(a.getName());
+//                System.out.println(a.getAmount());
+//                System.out.println(a.getCurrency());
+//                System.out.println(a.getNumberTransactionsProcessed());
+//                System.out.println(a.getNumberTransactionsFailed());
+//            }
+            tp.processTransactionList(transactionList, accountList);
+            totals[0] = tp.getTotalTransactions();
+            totals[1] = tp.getFailedTransactions();
 
             HttpResponse<Account> accountResponse = Unirest.get("http://your-bank.herouapp.com/api/Team6/accounts").asObject(Account.class);
             Account accountObject = accountResponse.getBody();
@@ -181,7 +193,6 @@ public class App extends Jooby {
     private boolean searchAccountFromDB(Account a) throws SQLException{
 
     }*/
-
 
     public static void main(final String[] args) {
 

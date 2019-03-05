@@ -27,10 +27,12 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private List<Transaction> fraudTransactionList = new ArrayList<>();
     private int[] totals = new int[2];
     private DataSource db;
 
     {
+
         // -- Start Boilerplate Setup --
         use(new UnirestHelper());
         use(new Hbs());
@@ -89,6 +91,7 @@ public class App extends Jooby {
 
             getAccountsFromApi();
             getTransactionsFromApi();
+            getFraudTransactionsFromApi();
             writeAccountsToDatabase(accountList);
             getAccountsFromDatabase();
 
@@ -125,6 +128,19 @@ public class App extends Jooby {
                         .basicAuth("Team6","xi35QJzheP")
                         .asObject(Transaction[].class);
         transactionList = Arrays.asList(accountsResponse.getBody());
+    }
+
+    private void getFraudTransactionsFromApi () throws UnirestException {
+        HttpResponse<Transaction[]> accountsResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/secure/fraud?token=IlFwG0Zmvbhi6Hb72L2tkxttg")
+                        .basicAuth("Team6","xi35QJzheP")
+                        .asObject(Transaction[].class);
+        fraudTransactionList = Arrays.asList(accountsResponse.getBody());
+
+        //Testing
+        for (int i = 0; i < fraudTransactionList.size(); i++) {
+            System.out.println("fraud: " + fraudTransactionList.get(i));
+        }
     }
 
     private void writeAccountsToDatabase (List<Account> accountList) throws SQLException {

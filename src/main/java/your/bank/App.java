@@ -27,7 +27,7 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
-    private List<Transaction> fraudTransactionList = new ArrayList<>();
+    private List<String> fraudTransactionList = new ArrayList<>();
     private int[] totals = new int[2];
     private DataSource db;
 
@@ -95,6 +95,21 @@ public class App extends Jooby {
             writeAccountsToDatabase(accountList);
             getAccountsFromDatabase();
 
+
+
+            //stoping transactions
+           for(String s: fraudTransactionList){
+               for (int i =0; i < transactionList.size(); i++){
+                   if(s.equals(transactionList.get(i))){
+                       transactionList.remove(i);
+                   }
+               }
+           }
+
+
+
+
+
             //test
             for ( Account a: accountList) {
                 System.out.println(a.getName());
@@ -103,6 +118,7 @@ public class App extends Jooby {
                 System.out.println(a.getNumberTransactionsProcessed());
                 System.out.println(a.getNumberTransactionsFailed());
             }
+
 
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
@@ -130,14 +146,16 @@ public class App extends Jooby {
         transactionList = Arrays.asList(accountsResponse.getBody());
     }
 
-    private List<String> getFraudTransactionsFromApi () throws UnirestException {
+    private void getFraudTransactionsFromApi () throws UnirestException {
+    //private List<String> getFraudTransactionsFromApi () throws UnirestException {
         HttpResponse<String[]> IDResponse =
                 Unirest.get("http://your-bank.herokuapp.com/api/Team6/secure/fraud")
                         .queryString("token","IlFwG0Zmvbhi6Hb72L2tkxttg")
                         //.basicAuth("Team6","xi35QJzheP")
                         .header("accept", "application/json")
                         .asObject(String[].class);
-        return new ArrayList<String>(Arrays.asList(IDResponse.getBody()));
+        fraudTransactionList = Arrays.asList(IDResponse.getBody());
+        //return new ArrayList<String>(Arrays.asList(IDResponse.getBody()));
 
         //Testing
        // for (int i = 0; i < fraudTransactionList.size(); i++) {

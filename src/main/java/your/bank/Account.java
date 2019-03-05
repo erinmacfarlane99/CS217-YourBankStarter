@@ -2,6 +2,8 @@ package your.bank;
 
 import java.math.BigDecimal;
 import static java.math.BigDecimal.*;
+
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -98,6 +100,12 @@ public class Account {
                     ", numberTransactionsProcessed: " + this.getNumberTransactionsProcessed() +
                     ", numberTransactionsFailed: " + this.getNumberTransactionsFailed() +
                     ", initialAmount: " + getInitialAmount();
+    }
+
+    public void searchAccountFromDB(Account a) throws SQLException {
+        try{
+
+        }
     }
 }
 

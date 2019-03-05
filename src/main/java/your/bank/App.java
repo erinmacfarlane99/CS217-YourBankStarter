@@ -10,9 +10,7 @@ import org.jooby.Results;
 import org.jooby.hbs.Hbs;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
-import org.json.JSONObject;
 
-import java.sql.*;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -94,7 +92,6 @@ public class App extends Jooby {
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
-
         });
 
         // Perform actions after startup
@@ -106,7 +103,7 @@ public class App extends Jooby {
     public List<Account> getAccountsFromApi() throws UnirestException {
         HttpResponse<Account[]> accountsResponse =
                 Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
-        return Arrays.asList(accountsResponse.getBody());
+        return new ArrayList<>(Arrays.asList(accountsResponse.getBody()));
     }
 
     public List<Transaction> getTransactionsFromApi () throws UnirestException {
@@ -114,9 +111,8 @@ public class App extends Jooby {
                 Unirest.get("http://your-bank.herokuapp.com/api/Team6/auth/transaction")
                         .basicAuth("Team6","xi35QJzheP")
                         .asObject(Transaction[].class);
-        return Arrays.asList(accountsResponse.getBody());
+        return new ArrayList<>(Arrays.asList(accountsResponse.getBody()));
     }
-
     public static void main(final String[] args) {
         run(App::new, args);
     }

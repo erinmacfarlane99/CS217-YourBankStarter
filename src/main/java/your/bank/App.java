@@ -79,6 +79,11 @@ public class App extends Jooby {
         get("/Team6Bank/transactionInfo", () ->
                 Results.html("Transactions").put("accounts",accountList).put("totalProcessed", totals[0]).put("totalFailed", totals[1]));
 
+        get("/Team6Bank/accountDetails", (req) -> {
+            System.out.println(req.param("search").value());
+            return Results.html("Search Accounts");
+        });
+
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");

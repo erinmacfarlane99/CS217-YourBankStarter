@@ -51,6 +51,10 @@ public class App extends Jooby {
 
         get("/Team6Bank", () -> Results.html("BankingHome"));
 
+        get("/Team6Bank/accountDetails", (req) -> {
+            System.out.println(req.param("search").value());
+            return Results.html("Search Accounts");
+        });
 
         // GET request which makes a call to another endpoint
         get("/hello", () -> {
@@ -93,19 +97,6 @@ public class App extends Jooby {
             transactionList = bd.getTransactionsFromApi();
             bd.writeAccountsToDatabase(accountList);
 
-//            getAccountsFromApi();
-//            getTransactionsFromApi();
-//            writeAccountsToDatabase(accountList);
-//            getAccountsFromDatabase();
-
-//            //test
-//            for ( Account a: accountList) {
-//                System.out.println(a.getName());
-//                System.out.println(a.getAmount());
-//                System.out.println(a.getCurrency());
-//                System.out.println(a.getNumberTransactionsProcessed());
-//                System.out.println(a.getNumberTransactionsFailed());
-//            }
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
@@ -187,16 +178,6 @@ public class App extends Jooby {
         }
         rs.close();
         connection.close();
-    }
-
-    public void searchDataBase() throws SQLException{
-        Connection connection = db.getConnection();
-        try{
-            Statement statement = connection.createStatement();
-            String searchQuery = "SELECT * FROM bankAccount WHERE name = " + name;
-        }catch (SQLException e){
-
-        }
     }
 
     public static void main(final String[] args) {

@@ -102,10 +102,11 @@ public class Account {
                     ", initialAmount: " + getInitialAmount();
     }
 
+    /*
     public void searchAccountFromDB(Account a) throws SQLException {
         try{
 
         }
-    }
+    }*/
 }
 

@@ -10,9 +10,7 @@ import org.jooby.Results;
 import org.jooby.hbs.Hbs;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
-import org.json.JSONObject;
 
-import java.sql.*;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -116,17 +114,13 @@ public class App extends Jooby {
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
-
         });
 
         // Perform actions after startup
         onStarted(() -> {
             System.out.println("Started!");
         });
-
     }
-
-
 //    public void searchDataBase(){
 //        PreparedStatement sqlStatement = db.prepare
 //    }

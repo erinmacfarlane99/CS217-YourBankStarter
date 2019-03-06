@@ -108,5 +108,4 @@ public class TransactionTests {
         assertEquals(tp.getTotalTransactions(), 3);
     }
 
-
 }

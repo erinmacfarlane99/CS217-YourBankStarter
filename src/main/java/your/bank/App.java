@@ -27,12 +27,14 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private List<String> fraudTransactionList = new ArrayList<>();
     private int[] totals = new int[2];
     private DataSource db;
     private BankingData bd;
 
 
     {
+
         // -- Start Boilerplate Setup --
         use(new UnirestHelper());
         use(new Hbs());
@@ -85,26 +87,32 @@ public class App extends Jooby {
 
             db = require(DataSource.class);
             TransactionProcessor tp = new TransactionProcessor();
-
             bd = new BankingData (require (DataSource.class));
 
-            accountList = bd.getAccountsFromApi();
-            transactionList = bd.getTransactionsFromApi();
+            getAccountsFromApi();
+            getTransactionsFromApi();
+            getFraudTransactionsFromApi();
             bd.writeAccountsToDatabase(accountList);
+            bd.getAccountsFromDatabase();
 
-//            getAccountsFromApi();
-//            getTransactionsFromApi();
-//            writeAccountsToDatabase(accountList);
-//            getAccountsFromDatabase();
+            //stoping transactions
+           for(String s: fraudTransactionList){
+               for (int i =0; i < transactionList.size(); i++){
+                   if(s.equals(transactionList.get(i))){
+                       transactionList.remove(i);
+                   }
+               }
+           }
 
-//            //test
-//            for ( Account a: accountList) {
-//                System.out.println(a.getName());
-//                System.out.println(a.getAmount());
-//                System.out.println(a.getCurrency());
-//                System.out.println(a.getNumberTransactionsProcessed());
-//                System.out.println(a.getNumberTransactionsFailed());
-//            }
+            //test
+            for ( Account a: accountList) {
+                System.out.println(a.getName());
+                System.out.println(a.getAmount());
+                System.out.println(a.getCurrency());
+                System.out.println(a.getNumberTransactionsProcessed());
+                System.out.println(a.getNumberTransactionsFailed());
+            }
+
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
@@ -118,9 +126,33 @@ public class App extends Jooby {
 
     }
 
+
 //    public void searchDataBase(){
 //        PreparedStatement sqlStatement = db.prepare
 //    }
+
+    private void getAccountsFromApi() throws UnirestException {
+        HttpResponse<Account[]> accountsResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
+        accountList = new ArrayList<>(Arrays.asList(accountsResponse.getBody()));
+    }
+
+    private void getTransactionsFromApi () throws UnirestException {
+        HttpResponse<Transaction[]> accountsResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/auth/transaction")
+                        .basicAuth("Team6","xi35QJzheP")
+                        .asObject(Transaction[].class);
+        transactionList = new ArrayList<>(Arrays.asList(accountsResponse.getBody()));
+    }
+
+    private void getFraudTransactionsFromApi () throws UnirestException {
+        HttpResponse<String[]> IDResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/secure/fraud")
+                        .queryString("token","IlFwG0Zmvbhi6Hb72L2tkxttg")
+                        .header("accept", "application/json")
+                        .asObject(String[].class);
+        fraudTransactionList = new ArrayList<>(Arrays.asList(IDResponse.getBody()));
+    }
 
     public static void main(final String[] args) {
         run(App::new, args);

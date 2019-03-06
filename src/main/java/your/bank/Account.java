@@ -2,8 +2,6 @@ package your.bank;
 
 import java.math.BigDecimal;
 import static java.math.BigDecimal.*;
-
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -31,6 +29,14 @@ public class Account {
 
     public String getName() {
         return name;
+    }
+
+    public ArrayList<Transaction> getSuccessfulTransactions() {
+        return successfulTransactions;
+    }
+
+    public ArrayList<Transaction> getFailedTransactions() {
+        return failedTransactions;
     }
 
     public int getNumberTransactionsFailed() {
@@ -81,6 +87,18 @@ public class Account {
         this.amount = this.amount.add(valueOf(t.getAmount()));
     }
 
+    public void withdraw(double amount) {
+        Transaction t = new Transaction(null, amount, this.name, null);
+        if (amount <= this.amount.doubleValue()) {
+            t.setFromStartingAmount(this.amount.doubleValue());
+            this.amount = this.amount.subtract(valueOf(amount));
+            successfulTransactions.add(t);
+        } else {
+            failedTransactions.add(t);
+            throw new ArithmeticException("can't withdraw amount greater than amount");
+        }
+    }
+
     public void withdraw(Transaction t) {
         if (t.getAmount() <= this.amount.doubleValue()) {
             t.setFromStartingAmount(this.amount.doubleValue());
@@ -94,19 +112,12 @@ public class Account {
 
     @Override
     public String toString() {
-            return "Account Name: " + this.getName() +
-                    ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
-                    ", currency: " + this.getCurrency() +
-                    ", numberTransactionsProcessed: " + this.getNumberTransactionsProcessed() +
-                    ", numberTransactionsFailed: " + this.getNumberTransactionsFailed() +
-                    ", initialAmount: " + getInitialAmount();
+        return "Account Name: " + this.getName() +
+                ", amount: " + new DecimalFormat("#.00").format(this.getAmount()) +
+                ", currency: " + this.getCurrency() +
+                ", numberTransactionsProcessed: " + this.getNumberTransactionsProcessed() +
+                ", numberTransactionsFailed: " + this.getNumberTransactionsFailed() +
+                ", initialAmount: " + getInitialAmount();
     }
 
-    /*
-    public void searchAccountFromDB(Account a) throws SQLException {
-        try{
-
-        }
-    }*/
 }
-

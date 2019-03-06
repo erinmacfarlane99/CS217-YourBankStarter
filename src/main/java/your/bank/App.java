@@ -10,11 +10,8 @@ import org.jooby.Results;
 import org.jooby.hbs.Hbs;
 import org.jooby.jdbc.Jdbc;
 import org.jooby.json.Jackson;
-import org.json.JSONObject;
 
-import java.sql.*;
 import javax.sql.DataSource;
-import java.awt.print.Book;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,12 +25,14 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private List<String> fraudTransactionList = new ArrayList<>();
     private int[] totals = new int[2];
     private DataSource db;
     private BankingData bd;
 
 
     {
+
         // -- Start Boilerplate Setup --
         use(new UnirestHelper());
         use(new Hbs());
@@ -51,10 +50,6 @@ public class App extends Jooby {
 
         get("/Team6Bank", () -> Results.html("BankingHome"));
 
-        get("/Team6Bank/accountDetails", (req) -> {
-            System.out.println(req.param("search").value());
-            return Results.html("Search Accounts");
-        });
 
         // GET request which makes a call to another endpoint
         get("/hello", () -> {
@@ -90,33 +85,50 @@ public class App extends Jooby {
 
             db = require(DataSource.class);
             TransactionProcessor tp = new TransactionProcessor();
-
             bd = new BankingData (require (DataSource.class));
 
-            accountList = bd.getAccountsFromApi();
-            transactionList = bd.getTransactionsFromApi();
+            getAccountsFromApi();
+            getTransactionsFromApi();
+            getFraudTransactionsFromApi();
             bd.writeAccountsToDatabase(accountList);
+            bd.getAccountsFromDatabase();
+
+            //stoping transactions
+            for(String s: fraudTransactionList){
+                for (int i =0; i < transactionList.size(); i++){
+                    if(s.equals(transactionList.get(i).getId())){
+                        transactionList.remove(i);
+                    }
+                }
+            }
+
+            //test
+            for ( Account a: accountList) {
+                System.out.println(a.getName());
+                System.out.println(a.getAmount());
+                System.out.println(a.getCurrency());
+                System.out.println(a.getNumberTransactionsProcessed());
+                System.out.println(a.getNumberTransactionsFailed());
+            }
 
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
-
-            HttpResponse<Account> accountResponse = Unirest.get("http://your-bank.herouapp.com/api/Team6/accounts").asObject(Account.class);
-            Account accountObject = accountResponse.getBody();
-
         });
 
         // Perform actions after startup
         onStarted(() -> {
             System.out.println("Started!");
         });
-
     }
+//    public void searchDataBase(){
+//        PreparedStatement sqlStatement = db.prepare
+//    }
 
     private void getAccountsFromApi() throws UnirestException {
         HttpResponse<Account[]> accountsResponse =
                 Unirest.get("http://your-bank.herokuapp.com/api/Team6/accounts").asObject(Account[].class);
-        accountList = Arrays.asList(accountsResponse.getBody());
+        accountList = new ArrayList<>(Arrays.asList(accountsResponse.getBody()));
     }
 
     private void getTransactionsFromApi () throws UnirestException {
@@ -124,65 +136,19 @@ public class App extends Jooby {
                 Unirest.get("http://your-bank.herokuapp.com/api/Team6/auth/transaction")
                         .basicAuth("Team6","xi35QJzheP")
                         .asObject(Transaction[].class);
-        transactionList = Arrays.asList(accountsResponse.getBody());
+        transactionList = new ArrayList<>(Arrays.asList(accountsResponse.getBody()));
     }
 
-    private void writeAccountsToDatabase (List<Account> accountList) throws SQLException {
-
-        //opens a connection
-        Connection connection = db.getConnection();
-
-        //create a table
-        Statement stmt = connection.createStatement();
-        String sql = "CREATE TABLE IF NOT EXISTS bankAccount (\n"
-                +" name text, \n"
-                + " amount decimal, \n"
-                + " currency text, \n"
-                + " transactionsProcessed int, \n"
-                + " transactionsFailed int);";
-        stmt.execute(sql);
-
-        //insert data
-        String sql2 = "INSERT INTO bankAccount (name, amount, currency, transactionsProcessed, transactionsFailed) " + "VALUES (?,?,?,?,?)";
-        PreparedStatement prep = connection.prepareStatement(sql2);
-        for ( Account a: accountList) {
-            prep.setString(1, a.getName());
-            prep.setDouble(2, a.getAmount());
-            prep.setString(3, a.getCurrency());
-            prep.setInt(4, a.getTransactionsProcessed());
-            prep.setInt(5, a.getTransactionsFailed());
-            prep.executeUpdate();
-        }
-
-        connection.close();
-    }
-
-    private void getAccountsFromDatabase () throws SQLException {
-
-        Connection connection = db.getConnection();
-
-        //retrieving data
-        Statement stmt2 = connection.createStatement();
-        String sql3 = "SELECT * FROM bankAccount";
-        ResultSet rs = stmt2.executeQuery(sql3);
-
-        //creating accounts from results
-        accountList = new ArrayList<>();
-        while (rs.next()){
-            String name = rs.getString("name");
-            int amount = rs.getInt("amount");
-            String currency = rs.getString("currency");
-            int transactionsProcessed = rs.getInt("transactionsProcessed");
-            int transactionsFailed = rs.getInt("transactionsFailed");
-            accountList.add(new Account(name, amount, currency, transactionsProcessed, transactionsFailed));
-        }
-        rs.close();
-        connection.close();
+    private void getFraudTransactionsFromApi () throws UnirestException {
+        HttpResponse<String[]> IDResponse =
+                Unirest.get("http://your-bank.herokuapp.com/api/Team6/secure/fraud")
+                        .queryString("token","IlFwG0Zmvbhi6Hb72L2tkxttg")
+                        .header("accept", "application/json")
+                        .asObject(String[].class);
+        fraudTransactionList = new ArrayList<>(Arrays.asList(IDResponse.getBody()));
     }
 
     public static void main(final String[] args) {
-
         run(App::new, args);
     }
-
 }

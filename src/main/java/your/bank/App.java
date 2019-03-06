@@ -98,7 +98,7 @@ public class App extends Jooby {
             //stoping transactions
            for(String s: fraudTransactionList){
                for (int i =0; i < transactionList.size(); i++){
-                   if(s.equals(transactionList.get(i))){
+                   if(s.equals(transactionList.get(i).getId())){
                        transactionList.remove(i);
                    }
                }

@@ -189,10 +189,9 @@ public class App extends Jooby {
         connection.close();
     }
 
-
-    private boolean searchAccountFromDB(Account a) throws SQLException{
-
-    }
+//    public void searchDataBase(){
+//        PreparedStatement sqlStatement = db.prepare
+//    }
 
     public static void main(final String[] args) {
 

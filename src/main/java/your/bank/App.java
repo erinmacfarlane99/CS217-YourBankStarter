@@ -189,9 +189,15 @@ public class App extends Jooby {
         connection.close();
     }
 
-//    public void searchDataBase(){
-//        PreparedStatement sqlStatement = db.prepare
-//    }
+    public void searchDataBase() throws SQLException{
+        Connection connection = db.getConnection();
+        try{
+            Statement statement = connection.createStatement();
+            String searchQuery = "SELECT * FROM bankAccount WHERE name = " + name;
+        }catch (SQLException e){
+
+        }
+    }
 
     public static void main(final String[] args) {
 

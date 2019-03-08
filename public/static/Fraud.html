@@ -10,21 +10,13 @@
 
 <table>
     <tr>
-        <th>Account Name  </th>
-        <th>Account Balance Before </th>
-        <th>Account Balance After</th>
-        <th>Currency  </th>
-        <th>Total Transactions Proccessed</th>
-        <th>Total Failed transactions</th>
+        <th>Transaction </th>
 
     </tr>
     {{#frauds}}
     <tr>
-        <td>{{name}}</td>
-        <td>{{amount}}</td>
-        <td>{{currency}}</td>
-        <td>{{successfulTransactions}}</td>
-        <td>{{failedTransactions}}</td>
+        <td>{{fraudTransactionList}}</td>
+
     </tr>
     {{/frauds}}
 </table>

@@ -85,10 +85,8 @@ public class App extends Jooby {
 
 
         get("/Team6Bank/fraudDetails", () ->
-                Results
-                        .when("text/html", () -> Results.html("Frauds").put("frauds",fraudTransactionList))
-                        .when("application/json", () -> Results.json(accountList))
-        );
+                //Results.html("Fraud").put("frauds",fraudTransactionList));
+                Results.json(fraudTransactionList));
 
 
 
@@ -107,7 +105,6 @@ public class App extends Jooby {
             getAccountsFromDatabase();
 
 
-
             //stoping transactions
            for(String s: fraudTransactionList){
                for (int i =0; i < transactionList.size(); i++){
@@ -116,6 +113,8 @@ public class App extends Jooby {
                    }
                }
            }
+
+
 
 
             //test

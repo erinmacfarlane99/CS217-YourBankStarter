@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fraud</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th>Account Name  </th>
+        <th>Account Balance Before </th>
+        <th>Account Balance After</th>
+        <th>Currency  </th>
+        <th>Total Transactions Proccessed</th>
+        <th>Total Failed transactions</th>
+
+    </tr>
+    {{#frauds}}
+    <tr>
+        <td>{{name}}</td>
+        <td>{{amount}}</td>
+        <td>{{currency}}</td>
+        <td>{{successfulTransactions}}</td>
+        <td>{{failedTransactions}}</td>
+    </tr>
+    {{/frauds}}
+</table>
+
+
+</body>
+</html>

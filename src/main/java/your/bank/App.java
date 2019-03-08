@@ -83,6 +83,17 @@ public class App extends Jooby {
 
         get("/Team6Bank/transactionInfo", () -> Results.html("Transactions").put("accounts",accountList).put("totalProcessed", totals[0]).put("totalFailed", totals[1]));
 
+
+        get("/Team6Bank/fraudDetails", () ->
+                Results
+                        .when("text/html", () -> Results.html("Frauds").put("frauds",fraudTransactionList))
+                        .when("application/json", () -> Results.json(accountList))
+        );
+
+
+
+
+
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");

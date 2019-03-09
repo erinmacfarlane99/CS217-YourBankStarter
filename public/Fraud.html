@@ -7,18 +7,22 @@
     <script src="/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-
+<h3> Fraudulent transactions and account details </h3>
 <table>
     <tr>
         <th>Account Name  </th>
         <th>Account </th>
         <th>Currency  </th>
+        <th>Total Transactions Processed  </th>
+        <th>Total Failed Transactions  </th>
     </tr>
     {{#accounts}}
     <tr>
         <td>{{name}}</td>
         <td>{{amount}}</td>
         <td>{{currency}}</td>
+        <td>{{numberTransactionsProcessed}}</td>
+        <td>{{numberTransactionsFailed}}</td>
     </tr>
     {{/accounts}}
 </table>

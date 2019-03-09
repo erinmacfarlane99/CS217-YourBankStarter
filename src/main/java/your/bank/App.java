@@ -88,7 +88,8 @@ public class App extends Jooby {
 
         get("/Team6Bank/fraudDetails", () ->
                 //Results.html("Fraud").put("accounts", fraudAccounts));
-               Results.json(fraudAccounts));
+              // Results.json(fraudAccounts));
+        Results.html("Fraud").put("accounts",fraudAccounts));
 
 
 
@@ -111,12 +112,21 @@ public class App extends Jooby {
            for(String s: fraudTransactionList){
                for (int i =0; i < transactionList.size(); i++){
                    if(s.equals(transactionList.get(i))){
+                       //Fraudtransactions.add();
                        transactionList.remove(i);
                    }
                }
            }
 
 
+            for(String s: fraudTransactionList){
+                for (int i =0; i < transactionList.size(); i++){
+                    Transaction t = transactionList.get(i);
+                    if(s.equals(t.getId())){
+                        Fraudtransactions.add(t);
+                    }
+                }
+            }
 
          getFraud();
 
@@ -225,12 +235,6 @@ public class App extends Jooby {
     }
 
     private void getFraud() {
-        for (String s : fraudTransactionList) {
-            for (int i = 0; i < transactionList.size(); i++) {
-                if (s.equals(transactionList.get(i))) {
-                    Fraudtransactions.add(transactionList.get(i));
-                }
-            }
 
             for (Transaction t : Fraudtransactions) {
                 for (Account a : accountList) {
@@ -247,7 +251,7 @@ public class App extends Jooby {
                 }
             }
         }
-    }
+
 
 
     public static void main(final String[] args) {

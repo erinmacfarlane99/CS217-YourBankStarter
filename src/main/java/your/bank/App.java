@@ -27,7 +27,9 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private List<Account> fraudAccounts = new ArrayList<>();
     private List<String> fraudTransactionList = new ArrayList<>();
+    private List<Transaction> Fraudtransactions = new ArrayList<>();
     private int[] totals = new int[2];
     private DataSource db;
 
@@ -85,8 +87,8 @@ public class App extends Jooby {
 
 
         get("/Team6Bank/fraudDetails", () ->
-                //Results.html("Fraud").put("frauds",fraudTransactionList));
-                Results.json(fraudTransactionList));
+                //Results.html("Fraud").put("accounts", fraudAccounts));
+               Results.json(fraudAccounts));
 
 
 
@@ -116,7 +118,9 @@ public class App extends Jooby {
 
 
 
+         getFraud();
 
+            /*
             //test
             for ( Account a: accountList) {
                 System.out.println(a.getName());
@@ -125,11 +129,18 @@ public class App extends Jooby {
                 System.out.println(a.getNumberTransactionsProcessed());
                 System.out.println(a.getNumberTransactionsFailed());
             }
+        */
+
+
+
 
 
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
+
+
+
         });
 
         // Perform actions after startup
@@ -211,6 +222,31 @@ public class App extends Jooby {
         }
         rs.close();
         connection.close();
+    }
+
+    private void getFraud() {
+        for (String s : fraudTransactionList) {
+            for (int i = 0; i < transactionList.size(); i++) {
+                if (s.equals(transactionList.get(i))) {
+                    Fraudtransactions.add(transactionList.get(i));
+                }
+            }
+
+            for (Transaction t : Fraudtransactions) {
+                for (Account a : accountList) {
+                    if (a.getName().equals(t.getFrom())) {
+                        for (Account b : accountList) {
+                            if (b.getName().equals(t.getTo())) {
+                                if (!fraudAccounts.contains(a) && !fraudAccounts.contains(b)) {
+                                    fraudAccounts.add(a);
+                                    fraudAccounts.add(b);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 

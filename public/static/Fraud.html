@@ -10,15 +10,17 @@
 
 <table>
     <tr>
-        <th>Transaction </th>
-
+        <th>Account Name  </th>
+        <th>Account </th>
+        <th>Currency  </th>
     </tr>
-    {{#frauds}}
+    {{#accounts}}
     <tr>
-        <td>{{fraudTransactionList}}</td>
-
+        <td>{{name}}</td>
+        <td>{{amount}}</td>
+        <td>{{currency}}</td>
     </tr>
-    {{/frauds}}
+    {{/accounts}}
 </table>
 
 

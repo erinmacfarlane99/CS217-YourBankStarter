@@ -25,7 +25,9 @@ public class App extends Jooby {
 
     private List<Account> accountList = new ArrayList<>();
     private List<Transaction> transactionList = new ArrayList<>();
+    private List<Account> fraudAccounts = new ArrayList<>();
     private List<String> fraudTransactionList = new ArrayList<>();
+    private List<Transaction> Fraudtransactions = new ArrayList<>();
     private int[] totals = new int[2];
     private DataSource db;
     private BankingData bd;
@@ -79,6 +81,16 @@ public class App extends Jooby {
         get("/Team6Bank/transactionInfo", () ->
                 Results.html("Transactions").put("accounts",accountList).put("totalProcessed", totals[0]).put("totalFailed", totals[1]));
 
+
+        get("/Team6Bank/fraudDetails", () ->
+                //Results.html("Fraud").put("accounts", fraudAccounts));
+              // Results.json(fraudAccounts));
+        Results.html("Fraud").put("accounts",fraudAccounts));
+
+
+
+
+
         // Perform actions on startup
         onStart(() -> {
             System.out.println("Starting Up...");
@@ -97,23 +109,19 @@ public class App extends Jooby {
            for(String s: fraudTransactionList){
                for (int i =0; i < transactionList.size(); i++){
                    if(s.equals(transactionList.get(i).getId())){
+                       Fraudtransactions.add(transactionList.get(i));
                        transactionList.remove(i);
                    }
                }
            }
-
-            //test
-            for ( Account a: accountList) {
-                System.out.println(a.getName());
-                System.out.println(a.getAmount());
-                System.out.println(a.getCurrency());
-                System.out.println(a.getNumberTransactionsProcessed());
-                System.out.println(a.getNumberTransactionsFailed());
-            }
+         getFraud();
 
             tp.processTransactionList(transactionList, accountList);
             totals[0] = tp.getTotalTransactions();
             totals[1] = tp.getFailedTransactions();
+
+
+
         });
 
         // Perform actions after startup
@@ -147,6 +155,23 @@ public class App extends Jooby {
                         .asObject(String[].class);
         fraudTransactionList = new ArrayList<>(Arrays.asList(IDResponse.getBody()));
     }
+
+    private void getFraud() {
+            for (Transaction t : Fraudtransactions) {
+                for (Account a : accountList) {
+                    if (a.getName().equals(t.getFrom())) {
+                        for (Account b : accountList) {
+                            if (b.getName().equals(t.getTo())) {
+                                if (!fraudAccounts.contains(a) && !fraudAccounts.contains(b)) {
+                                    fraudAccounts.add(a);
+                                    fraudAccounts.add(b);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
     public static void main(final String[] args) {
         run(App::new, args);

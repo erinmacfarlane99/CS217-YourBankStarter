@@ -88,6 +88,9 @@ public class App extends Jooby {
         Results.html("Fraud").put("accounts",fraudAccounts));
 
 
+        get("/Team6Bank/fraudTransactions", () ->
+                Results.html("ftransactions").put("transactions", Fraudtransactions));
+
 
 
 

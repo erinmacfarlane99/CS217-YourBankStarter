@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fraudulent Transactions</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<h3>Fraudulent Transactions</h3>
+<table>
+    <tr>
+        <th>ID  </th>
+        <th>From </th>
+        <th>To  </th>
+        <th>Amount  </th>
+    </tr>
+    {{#transactions}}
+    <tr>
+        <td>{{id}}</td>
+        <td>{{from}}</td>
+        <td>{{to}}</td>
+        <td>{{amount}}</td>
+    </tr>
+    {{/transactions}}
+</table>
+</body>
+</html>
